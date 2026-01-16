@@ -355,18 +355,44 @@ async function apiCall(data) {
     document.getElementById('selected-total-rem').innerText = total.toLocaleString();
   }
 
-  function bulkComplete() {
-    const selected = Array.from(document.querySelectorAll('.track-check:checked')).map(cb => parseInt(cb.getAttribute('data-id')));
-    if (selected.length === 0) return alert("Chọn ít nhất 1 đơn!");
-    if (confirm(`Hoàn thành ${selected.length} đơn đã chọn?`)) {
-      trackData = trackData.filter(i => !selected.includes(i.id));
-      renderTrack();
+  async function bulkComplete() {
+  const selectedCheckboxes = document.querySelectorAll('.track-check:checked');
+  const selectedIds = Array.from(selectedCheckboxes).map(cb => parseInt(cb.getAttribute('data-id')));
+  
+  if (selectedIds.length === 0) return alert("Vui lòng chọn ít nhất 1 đơn!");
+  
+  if (confirm(`Hoàn thành và xóa ${selectedIds.length} đơn đã chọn khỏi Sheet?`)) {
+    // Chạy vòng lặp để xóa từng ID trong Sheet
+    for (let id of selectedIds) {
+      await apiCall({
+        action: 'deleteData',
+        sheetName: 'Theo_Doi',
+        id: id
+      });
     }
-  }
 
-  function completeOrder(id) {
-    trackData = trackData.filter(i => i.id !== id); renderTrack();
+    // Cập nhật lại giao diện sau khi xóa xong
+    trackData = trackData.filter(i => !selectedIds.includes(i.id));
+    renderTrack();
+    document.getElementById('master-check').checked = false;
+    alert("Đã hoàn thành và đồng bộ dữ liệu với Sheet!");
   }
+}
+
+  async function completeOrder(id) {
+  if (confirm("Xác nhận hoàn thành và xóa đơn này khỏi hệ thống?")) {
+    // 1. Gửi lệnh xóa lên Google Sheets
+    await apiCall({
+      action: 'deleteData',
+      sheetName: 'Theo_Doi',
+      id: id
+    });
+
+    // 2. Xóa khỏi giao diện web
+    trackData = trackData.filter(i => i.id !== id);
+    renderTrack();
+  }
+}
 
   // PHẦN LỢI NHUẬN & XUẤT ẢNH
   function renderPartners() {
@@ -429,6 +455,7 @@ async function apiCall(data) {
 </body>
 
 </html>
+
 
 
 
