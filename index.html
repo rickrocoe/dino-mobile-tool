@@ -175,44 +175,21 @@ async function apiCall(data) {
   try {
     await fetch(SCRIPT_URL, {
       method: 'POST',
+      mode: 'no-cors', // Cần thiết để gửi dữ liệu từ Vercel sang Google
       body: JSON.stringify(data)
     });
   } catch (e) { console.error("Lỗi kết nối:", e); }
 }
+  let partners = [
+    { name: 'Sơn', capital: 0, workload: 0 },
+    { name: 'Nhân', capital: 0, workload: 0 },
+    { name: 'Thức', capital: 0, workload: 0 },
+    { name: 'Chấn', capital: 0, workload: 0 }
+  ];
+  let tempData = [];
+  let trackData = [];
 
-// Hàm cập nhật Trạng thái (đã đưa ra ngoài để không bị lỗi phạm vi)
-async function updateStatus(id, val) {
-  const item = trackData.find(i => i.id === id);
-  if (item) {
-    item.status = val;
-    await apiCall({
-      action: 'updateData',
-      sheetName: 'Theo_Doi',
-      id: id,
-      status: item.status,
-      note: item.note || ""
-    });
-    console.log("Đã cập nhật trạng thái đơn " + id);
-  }
-}
-
-// Hàm cập nhật Ghi chú (đã đưa ra ngoài)
-async function updateNote(id, val) {
-  const item = trackData.find(i => i.id === id);
-  if (item) {
-    item.note = val;
-    await apiCall({
-      action: 'updateData',
-      sheetName: 'Theo_Doi',
-      id: id,
-      status: item.status || "Đã mua hàng",
-      note: item.note
-    });
-    console.log("Đã cập nhật ghi chú đơn " + id);
-  }
-}
-
-async function checkLogin() {
+  async function checkLogin() {
   if (document.getElementById('pass-input').value === 'dino2025') {
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('main-app').classList.remove('hidden');
@@ -224,20 +201,59 @@ async function checkLogin() {
     
     renderPartners();
 
-    // Tải dữ liệu từ Sheet
+    // --- ĐOẠN MỚI THÊM: LẤY DỮ LIỆU TỪ SHEET ---
+    console.log("Đang tải dữ liệu từ Sheet...");
+    // Lưu ý: Vì chạy trên Vercel, ta phải gọi qua link /exec bằng fetch
     try {
       const response = await fetch(SCRIPT_URL + "?action=getAll");
       const result = await response.json();
       
       tempData = result.temp || [];
       trackData = result.track || [];
+      // --- HÀM CẬP NHẬT TRẠNG THÁI VÀ GHI CHÚ (Dán đoạn này vào) ---
 
+// --- HÀM CẬP NHẬT TRẠNG THÁI VÀ GHI CHÚ LÊN SHEET ---
+
+async function updateStatus(id, val) {
+  const item = trackData.find(i => i.id === id);
+  if (item) {
+    item.status = val;
+    // Gửi lệnh 'updateData' lên Google Sheets qua SCRIPT_URL
+    await apiCall({
+      action: 'updateData',
+      sheetName: 'Theo_Doi',
+      id: id,
+      status: item.status,
+      note: item.note || ""
+    });
+    console.log("Đã cập nhật trạng thái đơn " + id + " lên Sheet");
+  }
+}
+
+async function updateNote(id, val) {
+  const item = trackData.find(i => i.id === id);
+  if (item) {
+    item.note = val;
+    // Gửi lệnh 'updateData' lên Google Sheets qua SCRIPT_URL
+    await apiCall({
+      action: 'updateData',
+      sheetName: 'Theo_Doi',
+      id: id,
+      status: item.status || "Đã mua hàng",
+      note: item.note
+    });
+    console.log("Đã cập nhật ghi chú đơn " + id + " lên Sheet");
+  }
+}
+
+// -----------------------------------------------------------
       renderTemp();
       renderTrack();
       console.log("Đã đồng bộ dữ liệu xong!");
     } catch (e) {
       console.error("Không thể lấy dữ liệu từ Sheet:", e);
     }
+    // -----------------------------------------
   } else { 
     alert('Mật khẩu sai!'); 
   }
@@ -496,8 +512,6 @@ async function checkLogin() {
 </body>
 
 </html>
-
-
 
 
 
