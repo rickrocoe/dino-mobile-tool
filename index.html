@@ -212,11 +212,13 @@ async function apiCall(data) {
       trackData = result.track || [];
       // --- HÀM CẬP NHẬT TRẠNG THÁI VÀ GHI CHÚ (Dán đoạn này vào) ---
 
+// --- HÀM CẬP NHẬT TRẠNG THÁI VÀ GHI CHÚ LÊN SHEET ---
+
 async function updateStatus(id, val) {
   const item = trackData.find(i => i.id === id);
   if (item) {
     item.status = val;
-    // Gửi lệnh cập nhật trực tiếp lên Google Sheets
+    // Gửi lệnh 'updateData' lên Google Sheets qua SCRIPT_URL
     await apiCall({
       action: 'updateData',
       sheetName: 'Theo_Doi',
@@ -224,7 +226,7 @@ async function updateStatus(id, val) {
       status: item.status,
       note: item.note || ""
     });
-    console.log("Đã cập nhật trạng thái đơn " + id);
+    console.log("Đã cập nhật trạng thái đơn " + id + " lên Sheet");
   }
 }
 
@@ -232,7 +234,7 @@ async function updateNote(id, val) {
   const item = trackData.find(i => i.id === id);
   if (item) {
     item.note = val;
-    // Gửi lệnh cập nhật trực tiếp lên Google Sheets
+    // Gửi lệnh 'updateData' lên Google Sheets qua SCRIPT_URL
     await apiCall({
       action: 'updateData',
       sheetName: 'Theo_Doi',
@@ -240,7 +242,7 @@ async function updateNote(id, val) {
       status: item.status || "Đã mua hàng",
       note: item.note
     });
-    console.log("Đã cập nhật ghi chú đơn " + id);
+    console.log("Đã cập nhật ghi chú đơn " + id + " lên Sheet");
   }
 }
 
@@ -510,6 +512,7 @@ async function updateNote(id, val) {
 </body>
 
 </html>
+
 
 
 
