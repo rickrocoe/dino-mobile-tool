@@ -190,23 +190,38 @@
   }
 
   function calculatePrice() {
-    const cny = parseFloat(document.getElementById('price-cny').value) || 0;
-    const bhVnd = cny * 3920, bhFee = (bhVnd * 0.03) + 170000, bhTotal = bhVnd + bhFee, bhDep = bhTotal * 0.65, bhRem = bhTotal - bhDep + 36000;
-    const lcVnd = cny * 3050, lcFee = (lcVnd * 0.035) + 135000, lcTotal = lcVnd + lcFee, lcDep = lcTotal * 0.5, lcRem = lcTotal - lcDep + 16000;
+  const priceInput = document.getElementById('price-cny');
+  const cny = parseFloat(priceInput.value) || 0;
+  
+  // --- TÍNH TOÁN CHO BEHAO ---
+  const bhVnd = cny * 3920;
+  const bhFee = (bhVnd * 0.03) + 170000;
+  const bhTotal = bhVnd + bhFee;
+  const bhDep = bhTotal * 0.65;
+  const bhRem = bhTotal - bhDep + 36000; // Số tiền còn lại
 
-    document.getElementById('bh-vnd').innerText = bhVnd.toLocaleString();
-    document.getElementById('bh-fee').innerText = bhFee.toLocaleString();
-    document.getElementById('bh-total').innerText = bhTotal.toLocaleString();
-    document.getElementById('bh-dep').innerText = bhDep.toLocaleString();
-    document.getElementById('bh-rem').innerText = bhRem.toLocaleString();
+  // --- TÍNH TOÁN CHO LOCGC ---
+  const lcVnd = cny * 3050;
+  const lcFee = (lcVnd * 0.035) + 135000;
+  const lcTotal = lcVnd + lcFee;
+  const lcDep = lcTotal * 0.5;
+  const lcRem = lcTotal - lcDep + 16000; // Số tiền còn lại
 
-    document.getElementById('lc-vnd').innerText = lcVnd.toLocaleString();
-    document.getElementById('lc-fee').innerText = lcFee.toLocaleString();
-    document.getElementById('lc-total').innerText = lcTotal.toLocaleString();
-    document.getElementById('lc-dep').innerText = lcDep.toLocaleString();
-    document.getElementById('lc-rem').innerText = lcRem.toLocaleString();
-    return { bhTotal, bhRem, lcTotal, lcRem };
-  }
+  // --- HIỂN THỊ KẾT QUẢ ---
+  document.getElementById('bh-vnd').innerText = bhVnd.toLocaleString();
+  document.getElementById('bh-fee').innerText = bhFee.toLocaleString();
+  document.getElementById('bh-total').innerText = bhTotal.toLocaleString();
+  document.getElementById('bh-dep').innerText = bhDep.toLocaleString();
+  document.getElementById('bh-rem').innerText = bhRem.toLocaleString();
+
+  document.getElementById('lc-vnd').innerText = lcVnd.toLocaleString();
+  document.getElementById('lc-fee').innerText = lcFee.toLocaleString();
+  document.getElementById('lc-total').innerText = lcTotal.toLocaleString();
+  document.getElementById('lc-dep').innerText = lcDep.toLocaleString();
+  document.getElementById('lc-rem').innerText = lcRem.toLocaleString();
+
+  return { bhTotal, bhRem, lcTotal, lcRem };
+}
 
   function addToTrack(dv) {
     let name = document.getElementById('model-name').value;
@@ -371,4 +386,5 @@
   }
 </script>
 </body>
+
 </html>
