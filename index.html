@@ -210,7 +210,41 @@ async function apiCall(data) {
       
       tempData = result.temp || [];
       trackData = result.track || [];
-      
+      // --- HÀM CẬP NHẬT TRẠNG THÁI VÀ GHI CHÚ (Dán đoạn này vào) ---
+
+async function updateStatus(id, val) {
+  const item = trackData.find(i => i.id === id);
+  if (item) {
+    item.status = val;
+    // Gửi lệnh cập nhật trực tiếp lên Google Sheets
+    await apiCall({
+      action: 'updateData',
+      sheetName: 'Theo_Doi',
+      id: id,
+      status: item.status,
+      note: item.note || ""
+    });
+    console.log("Đã cập nhật trạng thái đơn " + id);
+  }
+}
+
+async function updateNote(id, val) {
+  const item = trackData.find(i => i.id === id);
+  if (item) {
+    item.note = val;
+    // Gửi lệnh cập nhật trực tiếp lên Google Sheets
+    await apiCall({
+      action: 'updateData',
+      sheetName: 'Theo_Doi',
+      id: id,
+      status: item.status || "Đã mua hàng",
+      note: item.note
+    });
+    console.log("Đã cập nhật ghi chú đơn " + id);
+  }
+}
+
+// -----------------------------------------------------------
       renderTemp();
       renderTrack();
       console.log("Đã đồng bộ dữ liệu xong!");
@@ -476,6 +510,7 @@ async function apiCall(data) {
 </body>
 
 </html>
+
 
 
 
