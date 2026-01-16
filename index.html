@@ -168,6 +168,18 @@
 </div>
 
 <script>
+  // THAY LINK /EXEC MỚI NHẤT CỦA BẠN VÀO ĐÂY
+const SCRIPT_URL = "https://script.google.com/macros/s/.../exec"; 
+
+async function apiCall(data) {
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors', // Cần thiết để gửi dữ liệu từ Vercel sang Google
+      body: JSON.stringify(data)
+    });
+  } catch (e) { console.error("Lỗi kết nối:", e); }
+}
   let partners = [
     { name: 'Sơn', capital: 0, workload: 0 },
     { name: 'Nhân', capital: 0, workload: 0 },
@@ -223,27 +235,34 @@
   return { bhTotal, bhRem, lcTotal, lcRem };
 }
 
-  function addToTrack(dv) {
-    let name = document.getElementById('model-name').value;
-    let link = document.getElementById('model-link').value;
-    const cny = parseFloat(document.getElementById('price-cny').value);
-    if (!cny) return alert("Vui lòng nhập giá tệ!");
-    const prices = calculatePrice();
-    const rem = (dv === 'BEHAO' ? prices.bhRem : prices.lcRem);
-    const total = (dv === 'BEHAO' ? prices.bhTotal : prices.lcTotal);
+  async function addToTrack(dv) {
+  let name = document.getElementById('model-name').value;
+  let link = document.getElementById('model-link').value;
+  const cny = parseFloat(document.getElementById('price-cny').value);
+  if (!cny) return alert("Vui lòng nhập giá tệ!");
+  
+  const prices = calculatePrice();
+  const rem = (dv === 'BEHAO' ? prices.bhRem : prices.lcRem);
 
-    if (!name || !link) {
-      if(!name) name = prompt("Tên Model còn thiếu:", "Sản phẩm mới");
-      if(!link) link = prompt("Dán Link sản phẩm vào đây:", "https://...");
-      if(name && link) {
-        tempData.push({ id: Date.now(), name, link, dv, cny, rem, total });
-        renderTemp();
-      }
-    } else {
-      trackData.push({ id: Date.now(), name, link, dv, rem, status: 'Đã mua hàng', note: '' });
-      renderTrack();
+  // Nếu thiếu tên/link thì yêu cầu nhập (giữ nguyên logic của bạn)
+  if (!name || !link) {
+    if(!name) name = prompt("Tên Model còn thiếu:", "Sản phẩm mới");
+    if(!link) link = prompt("Dán Link sản phẩm vào đây:", "https://...");
+    if(name && link) {
+       const newItem = { id: Date.now(), name, link, dv, cny, rem, total: (dv==='BEHAO'?prices.bhTotal:prices.lcTotal) };
+       // LƯU VÀO SHEET (Lưu Tạm)
+       await apiCall({ action: 'addData', sheetName: 'Luu_Tam', rowData: [newItem.id, newItem.name, newItem.link, newItem.dv, cny, newItem.total, newItem.rem] });
+       tempData.push(newItem);
+       renderTemp();
     }
+  } else {
+    const newItem = { id: Date.now(), name, link, dv, rem, status: 'Đã mua hàng', note: '' };
+    // LƯU VÀO SHEET (Theo Dõi)
+    await apiCall({ action: 'addData', sheetName: 'Theo_Doi', rowData: [newItem.id, newItem.name, newItem.link, newItem.dv, newItem.rem, newItem.status, ''] });
+    trackData.push(newItem);
+    renderTrack();
   }
+}
 
   function renderTemp() {
     const tbody = document.getElementById('temp-table-body');
@@ -262,18 +281,18 @@
     `).join('');
   }
 
-  function confirmTemp(id) {
-    const idx = tempData.findIndex(i => i.id === id);
-    trackData.push({ ...tempData[idx], status: 'Đã mua hàng', note: '' });
-    tempData.splice(idx, 1);
-    renderTemp(); renderTrack();
-  }
+  async function confirmTemp(id) {
+  const idx = tempData.findIndex(i => i.id === id);
+  const item = tempData[idx];
+  
+  // Gửi lệnh sang Google Sheet: Thêm vào Theo_Doi và Xóa ở Luu_Tam
+  await apiCall({ action: 'addData', sheetName: 'Theo_Doi', rowData: [item.id, item.name, item.link, item.dv, item.rem, 'Đã mua hàng', ''] });
+  await apiCall({ action: 'deleteData', sheetName: 'Luu_Tam', id: id });
 
-  function deleteTemp(id) { 
-    if(confirm("Xóa vĩnh viễn model này?")) {
-      tempData = tempData.filter(i => i.id !== id); renderTemp(); 
-    }
-  }
+  trackData.push({ ...item, status: 'Đã mua hàng', note: '' });
+  tempData.splice(idx, 1);
+  renderTemp(); renderTrack();
+}
 
   function renderTrack() {
     const tbody = document.getElementById('track-table-body');
@@ -388,4 +407,5 @@
 </body>
 
 </html>
+
 
