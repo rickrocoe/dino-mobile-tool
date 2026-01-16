@@ -315,6 +315,27 @@ async function apiCall(data) {
   tempData.splice(idx, 1);
   renderTemp(); renderTrack();
 }
+  async function deleteTemp(id) { 
+  if(confirm("Xác nhận xóa vĩnh viễn model này khỏi danh sách Lưu tạm?")) {
+    try {
+      // 1. Gửi lệnh xóa lên Google Sheets tại sheet Luu_Tam
+      await apiCall({ 
+        action: 'deleteData', 
+        sheetName: 'Luu_Tam', 
+        id: id 
+      });
+
+      // 2. Cập nhật giao diện web (Xóa dòng đó đi)
+      tempData = tempData.filter(i => i.id !== id); 
+      renderTemp(); 
+      
+      alert("Đã xóa dữ liệu trên hệ thống thành công!");
+    } catch (e) {
+      console.error("Lỗi khi xóa:", e);
+      alert("Có lỗi xảy ra khi xóa dữ liệu!");
+    }
+  }
+}
 
   function renderTrack() {
     const tbody = document.getElementById('track-table-body');
@@ -455,6 +476,7 @@ async function apiCall(data) {
 </body>
 
 </html>
+
 
 
 
