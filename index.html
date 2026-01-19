@@ -168,117 +168,99 @@
 </div>
 
 <script>
-  // THAY LINK /EXEC MỚI NHẤT CỦA BẠN VÀO ĐÂY
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHbqCVKdGH6ahFCp9CZ6PZWcq89OpCwwDNnhOkuVcTeQZxNs4lIMItlK4247AcBzK2/exec"; 
 
+// ================= API =================
 async function apiCall(data) {
-  try {
-    await fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors', // Cần thiết để gửi dữ liệu từ Vercel sang Google
-      body: JSON.stringify(data)
-    });
-  } catch (e) { console.error("Lỗi kết nối:", e); }
+  const res = await fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+  return res.json();
 }
-  let partners = [
-    { name: 'Sơn', capital: 0, workload: 0 },
-    { name: 'Nhân', capital: 0, workload: 0 },
-    { name: 'Thức', capital: 0, workload: 0 },
-    { name: 'Chấn', capital: 0, workload: 0 }
-  ];
-  let tempData = [];
-  let trackData = [];
 
-  async function checkLogin() {
-  if (document.getElementById('pass-input').value === 'dino2025') {
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('main-app').classList.remove('hidden');
-    
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    document.getElementById('current-date').innerText = dateStr;
-    document.getElementById('report-date').innerText = "Kỳ báo cáo: " + dateStr;
-    
-    renderPartners();
+async function loadData() {
+  const res = await fetch(SCRIPT_URL + "?action=getAll");
+  const db = await res.json();
+  tempData = db.temp || [];
+  trackData = db.track || [];
+  renderTemp();
+  renderTrack();
+}
 
-    // --- ĐOẠN MỚI THÊM: LẤY DỮ LIỆU TỪ SHEET ---
-    console.log("Đang tải dữ liệu từ Sheet...");
-    // Lưu ý: Vì chạy trên Vercel, ta phải gọi qua link /exec bằng fetch
-    try {
-      const response = await fetch(SCRIPT_URL + "?action=getAll");
-      const result = await response.json();
-      
-      tempData = result.temp || [];
-      trackData = result.track || [];
-      // --- HÀM CẬP NHẬT TRẠNG THÁI VÀ GHI CHÚ (Dán đoạn này vào) ---
+// ================= DATA =================
+let partners = [
+  { name: 'Sơn', capital: 0, workload: 0 },
+  { name: 'Nhân', capital: 0, workload: 0 },
+  { name: 'Thức', capital: 0, workload: 0 },
+  { name: 'Chấn', capital: 0, workload: 0 }
+];
+let tempData = [];
+let trackData = [];
 
-// --- HÀM CẬP NHẬT TRẠNG THÁI VÀ GHI CHÚ LÊN SHEET ---
+// ================= LOGIN =================
+async function checkLogin() {
+  if (document.getElementById('pass-input').value !== 'dino2025') {
+    return alert("Sai mật khẩu!");
+  }
 
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('main-app').classList.remove('hidden');
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('vi-VN', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('current-date').innerText = dateStr;
+  document.getElementById('report-date').innerText = "Kỳ báo cáo: " + dateStr;
+
+  renderPartners();
+  await loadData();
+}
+
+// ================= UPDATE =================
 async function updateStatus(id, val) {
   const item = trackData.find(i => i.id === id);
-  if (item) {
-    item.status = val;
-    // Gửi lệnh 'updateData' lên Google Sheets qua SCRIPT_URL
-    await apiCall({
-      action: 'updateData',
-      sheetName: 'Theo_Doi',
-      id: id,
-      status: item.status,
-      note: item.note || ""
-    });
-    console.log("Đã cập nhật trạng thái đơn " + id + " lên Sheet");
-  }
+  if (!item) return;
+  item.status = val;
+
+  await apiCall({
+    action: "updateData",
+    sheetName: "Theo_Doi",
+    id: id,
+    update: { status: val, note: item.note || "" }
+  });
 }
 
 async function updateNote(id, val) {
   const item = trackData.find(i => i.id === id);
-  if (item) {
-    item.note = val;
-    // Gửi lệnh 'updateData' lên Google Sheets qua SCRIPT_URL
-    await apiCall({
-      action: 'updateData',
-      sheetName: 'Theo_Doi',
-      id: id,
-      status: item.status || "Đã mua hàng",
-      note: item.note
-    });
-    console.log("Đã cập nhật ghi chú đơn " + id + " lên Sheet");
-  }
+  if (!item) return;
+  item.note = val;
+
+  await apiCall({
+    action: "updateData",
+    sheetName: "Theo_Doi",
+    id: id,
+    update: { status: item.status || "Đã mua hàng", note: val }
+  });
 }
 
-// -----------------------------------------------------------
-      renderTemp();
-      renderTrack();
-      console.log("Đã đồng bộ dữ liệu xong!");
-    } catch (e) {
-      console.error("Không thể lấy dữ liệu từ Sheet:", e);
-    }
-    // -----------------------------------------
-  } else { 
-    alert('Mật khẩu sai!'); 
-  }
-}
+// ================= PRICE =================
+function calculatePrice() {
+  const cny = parseFloat(document.getElementById('price-cny').value) || 0;
 
-  function calculatePrice() {
-  const priceInput = document.getElementById('price-cny');
-  const cny = parseFloat(priceInput.value) || 0;
-  
-  // --- TÍNH TOÁN CHO BEHAO ---
   const bhVnd = cny * 3920;
-  const bhFee = (bhVnd * 0.03) + 170000;
+  const bhFee = bhVnd * 0.03 + 170000;
   const bhTotal = bhVnd + bhFee;
   const bhDep = bhTotal * 0.65;
-  const bhRem = bhTotal - bhDep + 36000; // Số tiền còn lại
+  const bhRem = bhTotal - bhDep + 36000;
 
-  // --- TÍNH TOÁN CHO LOCGC ---
-  const lcVnd = cny * 3950;
-  const lcFee = (lcVnd * 0.035) + 135000;
+  const lcVnd = cny * 3050;
+  const lcFee = lcVnd * 0.035 + 135000;
   const lcTotal = lcVnd + lcFee;
   const lcDep = lcTotal * 0.5;
-  const lcRem = lcTotal - lcDep + 16000; // Số tiền còn lại
+  const lcRem = lcTotal - lcDep + 16000;
 
-  // --- HIỂN THỊ KẾT QUẢ ---
-  document.getElementById('bh-vnd').innerText = bhVnd.toLocaleString();
+  bhVnd && (document.getElementById('bh-vnd').innerText = bhVnd.toLocaleString());
   document.getElementById('bh-fee').innerText = bhFee.toLocaleString();
   document.getElementById('bh-total').innerText = bhTotal.toLocaleString();
   document.getElementById('bh-dep').innerText = bhDep.toLocaleString();
@@ -293,225 +275,108 @@ async function updateNote(id, val) {
   return { bhTotal, bhRem, lcTotal, lcRem };
 }
 
-  async function addToTrack(dv) {
+// ================= TRACK =================
+async function addToTrack(dv) {
   let name = document.getElementById('model-name').value;
   let link = document.getElementById('model-link').value;
   const cny = parseFloat(document.getElementById('price-cny').value);
-  if (!cny) return alert("Vui lòng nhập giá tệ!");
-  
+  if (!cny) return alert("Nhập giá tệ!");
+
   const prices = calculatePrice();
-  const rem = (dv === 'BEHAO' ? prices.bhRem : prices.lcRem);
+  const rem = dv === "BEHAO" ? prices.bhRem : prices.lcRem;
+  const total = dv === "BEHAO" ? prices.bhTotal : prices.lcTotal;
 
-  // Nếu thiếu tên/link thì yêu cầu nhập (giữ nguyên logic của bạn)
-  if (!name || !link) {
-    if(!name) name = prompt("Tên Model còn thiếu:", "Sản phẩm mới");
-    if(!link) link = prompt("Dán Link sản phẩm vào đây:", "https://...");
-    if(name && link) {
-       const newItem = { id: Date.now(), name, link, dv, cny, rem, total: (dv==='BEHAO'?prices.bhTotal:prices.lcTotal) };
-       // LƯU VÀO SHEET (Lưu Tạm)
-       await apiCall({ action: 'addData', sheetName: 'Luu_Tam', rowData: [newItem.id, newItem.name, newItem.link, newItem.dv, cny, newItem.total, newItem.rem] });
-       tempData.push(newItem);
-       renderTemp();
-    }
-  } else {
-    const newItem = { id: Date.now(), name, link, dv, rem, status: 'Đã mua hàng', note: '' };
-    // LƯU VÀO SHEET (Theo Dõi)
-    await apiCall({ action: 'addData', sheetName: 'Theo_Doi', rowData: [newItem.id, newItem.name, newItem.link, newItem.dv, newItem.rem, newItem.status, ''] });
-    trackData.push(newItem);
-    renderTrack();
-  }
+  if (!name) name = prompt("Tên model:");
+  if (!link) link = prompt("Link sản phẩm:");
+
+  const item = { id: Date.now(), name, link, dv, rem, total, status: "Đã mua hàng", note: "" };
+
+  await apiCall({
+    action: "addData",
+    sheetName: "Theo_Doi",
+    rowData: [item.id, item.name, item.link, item.dv, item.rem, item.status, item.note]
+  });
+
+  trackData.push(item);
+  renderTrack();
 }
 
-  function renderTemp() {
-    const tbody = document.getElementById('temp-table-body');
-    document.getElementById('temp-count').innerText = tempData.length;
-    tbody.innerHTML = tempData.map(item => `
-      <tr class="hover:bg-slate-50 transition">
-        <td class="p-4 font-bold text-slate-700">${item.name}</td>
-        <td class="p-4"><a href="${item.link}" target="_blank" class="text-blue-500 hover:text-blue-700"><i class="fas fa-external-link-alt"></i> Xem</a></td>
-        <td class="p-4"><span class="status-badge ${item.dv==='BEHAO'?'bg-blue-100 text-blue-700':'bg-yellow-100 text-yellow-800'}">${item.dv}</span></td>
-        <td class="p-4 text-right font-bold font-mono">${item.total.toLocaleString()}đ</td>
-        <td class="p-4 text-center space-x-2">
-          <button onclick="confirmTemp(${item.id})" class="text-green-500 hover:bg-green-50 p-2 rounded-lg"><i class="fas fa-check-circle"></i> Chốt</button>
-          <button onclick="deleteTemp(${item.id})" class="text-red-400 hover:bg-red-50 p-2 rounded-lg"><i class="fas fa-trash"></i></button>
-        </td>
-      </tr>
-    `).join('');
-  }
+// ================= RENDER =================
+function renderTemp() {
+  const tbody = document.getElementById('temp-table-body');
+  document.getElementById('temp-count').innerText = tempData.length;
 
-  async function confirmTemp(id) {
-  const idx = tempData.findIndex(i => i.id === id);
-  const item = tempData[idx];
-  
-  // Gửi lệnh sang Google Sheet: Thêm vào Theo_Doi và Xóa ở Luu_Tam
-  await apiCall({ action: 'addData', sheetName: 'Theo_Doi', rowData: [item.id, item.name, item.link, item.dv, item.rem, 'Đã mua hàng', ''] });
-  await apiCall({ action: 'deleteData', sheetName: 'Luu_Tam', id: id });
-
-  trackData.push({ ...item, status: 'Đã mua hàng', note: '' });
-  tempData.splice(idx, 1);
-  renderTemp(); renderTrack();
-}
-  async function deleteTemp(id) { 
-  if(confirm("Xác nhận xóa vĩnh viễn model này khỏi danh sách Lưu tạm?")) {
-    try {
-      // 1. Gửi lệnh xóa lên Google Sheets tại sheet Luu_Tam
-      await apiCall({ 
-        action: 'deleteData', 
-        sheetName: 'Luu_Tam', 
-        id: id 
-      });
-
-      // 2. Cập nhật giao diện web (Xóa dòng đó đi)
-      tempData = tempData.filter(i => i.id !== id); 
-      renderTemp(); 
-      
-      alert("Đã xóa dữ liệu trên hệ thống thành công!");
-    } catch (e) {
-      console.error("Lỗi khi xóa:", e);
-      alert("Có lỗi xảy ra khi xóa dữ liệu!");
-    }
-  }
+  tbody.innerHTML = tempData.map(item => `
+    <tr>
+      <td class="p-4 font-bold">${item.name}</td>
+      <td class="p-4"><a href="${item.link}" target="_blank" class="text-blue-500">Xem</a></td>
+      <td class="p-4">${item.dv}</td>
+      <td class="p-4 text-right font-bold">${item.total.toLocaleString()}đ</td>
+      <td class="p-4 text-center">
+        <button onclick="deleteTemp(${item.id})" class="text-red-500">Xóa</button>
+      </td>
+    </tr>
+  `).join('');
 }
 
-  function renderTrack() {
-    const tbody = document.getElementById('track-table-body');
-    tbody.innerHTML = trackData.map(item => `
-      <tr class="hover:bg-blue-50/50 transition">
-        <td class="p-4 text-center"><input type="checkbox" class="track-check" data-id="${item.id}" data-rem="${item.rem}" onchange="calcSelectedRem()"></td>
-        <td class="p-4">
-          <div class="font-bold text-slate-800">${item.name}</div>
-          <div class="text-[10px] text-blue-500 truncate max-w-[150px] italic">${item.link}</div>
-        </td>
-        <td class="p-4 text-center text-[10px] font-bold">${item.dv}</td>
-        <td class="p-4 text-right font-bold text-rose-600 font-mono">${item.rem.toLocaleString()}đ</td>
-        <td class="p-4 text-center">
-          <select onchange="updateStatus(${item.id}, this.value)" class="text-[10px] bg-white border rounded px-2 py-1 outline-none">
-            <option ${item.status==='Đã mua hàng'?'selected':''}>Đã mua hàng</option>
-            <option ${item.status==='Đã về đến VN'?'selected':''}>Đã về đến VN</option>
-            <option ${item.status==='Đang vận chuyển'?'selected':''}>Đang vận chuyển</option>
-            <option ${item.status==='Đã nhận hàng'?'selected':''}>Đã nhận hàng</option>
-          </select>
-        </td>
-        <td class="p-4"><input type="text" value="${item.note}" onchange="updateNote(${item.id}, this.value)" placeholder="..." class="bg-transparent border-b border-dashed border-slate-300 w-full text-xs"></td>
-        <td class="p-4 text-center">
-          <button onclick="completeOrder(${item.id})" class="bg-blue-600 text-white px-3 py-1 rounded-lg text-[10px] font-bold">HOÀN THÀNH</button>
-        </td>
-      </tr>
-    `).join('');
-    calcSelectedRem();
-  }
+function renderTrack() {
+  const tbody = document.getElementById('track-table-body');
 
-  function toggleAllCheck(master) {
-    document.querySelectorAll('.track-check').forEach(cb => cb.checked = master.checked);
-    calcSelectedRem();
-  }
+  tbody.innerHTML = trackData.map(item => `
+    <tr>
+      <td class="p-4 text-center"><input type="checkbox" class="track-check" data-rem="${item.rem}" onchange="calcSelectedRem()"></td>
+      <td class="p-4 font-bold">${item.name}</td>
+      <td class="p-4">${item.dv}</td>
+      <td class="p-4 text-right text-red-600 font-bold">${item.rem.toLocaleString()}đ</td>
+      <td class="p-4">
+        <select onchange="updateStatus(${item.id}, this.value)">
+          <option ${item.status==="Đã mua hàng"?"selected":""}>Đã mua hàng</option>
+          <option ${item.status==="Đã về đến VN"?"selected":""}>Đã về đến VN</option>
+          <option ${item.status==="Đang vận chuyển"?"selected":""}>Đang vận chuyển</option>
+          <option ${item.status==="Đã nhận hàng"?"selected":""}>Đã nhận hàng</option>
+        </select>
+      </td>
+      <td class="p-4"><input value="${item.note}" onchange="updateNote(${item.id}, this.value)"></td>
+      <td class="p-4"><button onclick="completeOrder(${item.id})" class="text-blue-600">Hoàn thành</button></td>
+    </tr>
+  `).join('');
 
-  function calcSelectedRem() {
-    let total = 0;
-    document.querySelectorAll('.track-check:checked').forEach(cb => total += parseFloat(cb.getAttribute('data-rem')));
-    document.getElementById('selected-total-rem').innerText = total.toLocaleString();
-  }
-
-  async function bulkComplete() {
-  const selectedCheckboxes = document.querySelectorAll('.track-check:checked');
-  const selectedIds = Array.from(selectedCheckboxes).map(cb => parseInt(cb.getAttribute('data-id')));
-  
-  if (selectedIds.length === 0) return alert("Vui lòng chọn ít nhất 1 đơn!");
-  
-  if (confirm(`Hoàn thành và xóa ${selectedIds.length} đơn đã chọn khỏi Sheet?`)) {
-    // Chạy vòng lặp để xóa từng ID trong Sheet
-    for (let id of selectedIds) {
-      await apiCall({
-        action: 'deleteData',
-        sheetName: 'Theo_Doi',
-        id: id
-      });
-    }
-
-    // Cập nhật lại giao diện sau khi xóa xong
-    trackData = trackData.filter(i => !selectedIds.includes(i.id));
-    renderTrack();
-    document.getElementById('master-check').checked = false;
-    alert("Đã hoàn thành và đồng bộ dữ liệu với Sheet!");
-  }
+  calcSelectedRem();
 }
 
-  async function completeOrder(id) {
-  if (confirm("Xác nhận hoàn thành và xóa đơn này khỏi hệ thống?")) {
-    // 1. Gửi lệnh xóa lên Google Sheets
-    await apiCall({
-      action: 'deleteData',
-      sheetName: 'Theo_Doi',
-      id: id
-    });
+// ================= COMPLETE =================
+async function completeOrder(id) {
+  if (!confirm("Hoàn thành đơn này?")) return;
 
-    // 2. Xóa khỏi giao diện web
-    trackData = trackData.filter(i => i.id !== id);
-    renderTrack();
-  }
+  await apiCall({ action: "deleteData", sheetName: "Theo_Doi", id });
+  trackData = trackData.filter(i => i.id !== id);
+  renderTrack();
 }
 
-  // PHẦN LỢI NHUẬN & XUẤT ẢNH
-  function renderPartners() {
-    const container = document.getElementById('partners-container');
-    container.innerHTML = partners.map((p, idx) => `
-      <div class="card p-5 border-l-4 border-yellow-400">
-        <div class="flex justify-between mb-3"><span class="font-bold text-slate-800">${p.name}</span><i class="fas fa-user-circle text-slate-300"></i></div>
-        <div class="space-y-3">
-          <div><label class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Cổ phần (VND)</label>
-          <input type="number" oninput="updatePartner(${idx}, 'capital', this.value)" class="w-full font-bold border-b border-slate-200 outline-none" value="${p.capital}"></div>
-          <div><label class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">% Công việc</label>
-          <input type="number" oninput="updatePartner(${idx}, 'workload', this.value)" class="w-full font-bold border-b border-slate-200 outline-none text-blue-600" value="${p.workload}"></div>
-        </div>
-      </div>
-    `).join('');
-    calculateProfit();
-  }
+// ================= UTILS =================
+function calcSelectedRem() {
+  let total = 0;
+  document.querySelectorAll('.track-check:checked').forEach(cb => total += parseFloat(cb.dataset.rem));
+  document.getElementById('selected-total-rem').innerText = total.toLocaleString();
+}
 
-  function updatePartner(idx, key, val) { partners[idx][key] = parseFloat(val) || 0; calculateProfit(); }
-  function addPartner() { const n = prompt("Tên cổ đông:"); if(n) { partners.push({name:n, capital:0, workload:0}); renderPartners(); } }
-
-  function calculateProfit() {
-    const totalP = parseFloat(document.getElementById('total-profit').value) || 0;
-    const p60 = totalP * 0.6, p40 = totalP * 0.4;
-    const totalCap = partners.reduce((s, p) => s + p.capital, 0), totalWork = partners.reduce((s, p) => s + p.workload, 0);
-
-    let html = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 opacity-70">
-      <div class="text-xs">60% Theo cổ phần: ${p60.toLocaleString()}đ</div>
-      <div class="text-xs md:text-right">40% Theo công sức: ${p40.toLocaleString()}đ</div>
-    </div><div class="space-y-3">`;
-
-    partners.forEach(p => {
-      const shareCap = totalCap > 0 ? (p.capital / totalCap) * p60 : 0;
-      const shareWork = totalWork > 0 ? (p.workload / totalWork) * p40 : 0;
-      const total = shareCap + shareWork;
-      html += `
-        <div class="flex justify-between items-center p-3 rounded-xl bg-white/5 border border-white/10">
-          <div><span class="font-bold text-yellow-400 text-lg">${p.name}</span><div class="text-[10px] opacity-50 italic">Vốn: ${shareCap.toLocaleString()} + Công: ${shareWork.toLocaleString()}</div></div>
-          <div class="text-xl font-black text-white">${total.toLocaleString()}đ</div>
-        </div>`;
-    });
-    document.getElementById('profit-results').innerHTML = html + `</div>`;
-  }
-
-  async function captureReport() {
-    const area = document.getElementById('profit-report-area');
-    // Ẩn các nút bấm trước khi chụp
-    document.querySelectorAll('.no-print').forEach(el => el.style.display = 'none');
-    
-    const canvas = await html2canvas(area, { backgroundColor: '#f1f5f9', scale: 2 });
-    const link = document.createElement('a');
-    link.download = `Bao-Cao-Dino-Mobile-${new Date().getTime()}.png`;
-    link.href = canvas.toDataURL();
-    link.click();
-
-    // Hiện lại nút bấm
-    document.querySelectorAll('.no-print').forEach(el => el.style.display = 'flex');
-  }
+// ================= PROFIT =================
+function renderPartners() {
+  const container = document.getElementById('partners-container');
+  container.innerHTML = partners.map((p, idx) => `
+    <div class="card p-5">
+      <b>${p.name}</b>
+      <input type="number" placeholder="Vốn" oninput="partners[${idx}].capital=this.value">
+      <input type="number" placeholder="% công" oninput="partners[${idx}].workload=this.value">
+    </div>
+  `).join('');
+}
 </script>
+
 </body>
 
 </html>
+
 
 
 
