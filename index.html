@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DINO MOBILE - Quản lý siêu cấp</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;800&display=swap');
+    :root { --blue-dino: #0f172a; --accent-blue: #2563eb; --yellow-dino: #facc15; }
+    body { background-color: #f1f5f9; font-family: 'Lexend', sans-serif; }
+    .header-gradient { background: linear-gradient(135deg, var(--blue-dino), #1e40af); }
+    .card { background: white; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
+    .btn-primary { background-color: var(--accent-blue); color: white; transition: all 0.2s; }
+    .btn-primary:hover { background-color: #1d4ed8; transform: scale(1.02); }
+    .btn-yellow { background-color: var(--yellow-dino); color: #0f172a; font-weight: 600; }
+    .input-field { border: 2px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; width: 100%; transition: 0.3s; }
+    .input-field:focus { border-color: var(--accent-blue); outline: none; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+    .hidden { display: none; }
+    .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+
+<div id="login-screen" class="fixed inset-0 flex items-center justify-center bg-slate-900 z-50">
+  <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md text-center mx-4">
+    <div class="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+      <i class="fas fa-dragon text-3xl text-blue-900"></i>
+    </div>
+    <h1 class="text-3xl font-extrabold mb-2 text-slate-800">DINO MOBILE TOOL</h1>
+    <p class="text-slate-500 mb-8">Hệ thống quản lý nội bộ</p>
+    <input type="password" id="pass-input" class="input-field mb-6 text-center text-xl tracking-widest" placeholder="••••••••">
+    <button onclick="checkLogin()" class="w-full btn-primary py-4 rounded-xl font-bold text-lg shadow-lg">XÁC NHẬN TRUY CẬP</button>
+  </div>
+</div>
+
+<div id="main-app" class="hidden">
+  <header class="header-gradient text-white pt-8 pb-12 px-6 shadow-xl">
+    <div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="text-center md:text-left">
+        <h1 class="text-3xl font-black tracking-tighter">QUẢN LÝ DINO MOBILE <span class="text-yellow-400">PRO</span></h1>
+        <p class="text-blue-200 opacity-80">Săn điện thoại khủng, giá siêu ngon!</p>
+      </div>
+      <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/20 text-center">
+        <p class="text-xs uppercase opacity-70">Ngày hôm nay</p>
+        <p id="current-date" class="font-bold text-yellow-400"></p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 -mt-8 pb-20">
+    <div class="grid lg:grid-cols-3 gap-6 mb-8">
+      <div class="card p-6 border-t-4 border-accent-blue">
+        <h3 class="font-bold text-slate-800 mb-4 flex items-center"><i class="fas fa-edit mr-2 text-blue-500"></i> NHẬP THÔNG TIN</h3>
+        <div class="space-y-4">
+          <input type="text" id="model-name" class="input-field" placeholder="Tên Model">
+          <input type="text" id="model-link" class="input-field" placeholder="Link sản phẩm">
+          <div class="relative">
+            <span class="absolute left-3 top-3 text-slate-400 font-bold">¥</span>
+            <input type="number" id="price-cny" oninput="calculatePrice()" class="input-field pl-8 border-yellow-400 font-bold text-xl" placeholder="Giá tệ">
+          </div>
+        </div>
+      </div>
+
+      <div class="card p-6 border-t-4 border-blue-600 bg-blue-50/30">
+        <div class="flex justify-between items-start mb-4">
+          <span class="bg-blue-600 text-white text-[10px] px-2 py-1 rounded-md font-bold italic tracking-widest">BEHAO</span>
+          <i class="fas fa-ship text-blue-200 text-2xl"></i>
+        </div>
+        <div class="space-y-2 text-sm text-slate-600">
+          <div class="flex justify-between"><span>Giá VND:</span><span id="bh-vnd" class="font-semibold">0</span></div>
+          <div class="flex justify-between"><span>Phí mua:</span><span id="bh-fee">0</span></div>
+          <div class="flex justify-between border-t pt-2 mt-2 font-bold text-lg text-blue-700"><span>Tổng:</span><span id="bh-total">0</span></div>
+          <div class="flex justify-between text-xs"><span>Cọc (65%):</span><span id="bh-dep">0</span></div>
+          <div class="flex justify-between font-bold text-red-600 bg-red-50 p-2 rounded-lg mt-2 italic"><span>Còn lại:</span><span id="bh-rem">0</span></div>
+        </div>
+        <button onclick="addToTrack('BEHAO')" class="w-full mt-4 btn-primary py-2 rounded-xl text-xs font-bold">CHỐN ĐƠN BEHAO</button>
+      </div>
+
+      <div class="card p-6 border-t-4 border-yellow-500 bg-yellow-50/30">
+        <div class="flex justify-between items-start mb-4">
+          <span class="bg-yellow-500 text-blue-900 text-[10px] px-2 py-1 rounded-md font-bold italic tracking-widest">LOCGC</span>
+          <i class="fas fa-truck-fast text-yellow-200 text-2xl"></i>
+        </div>
+        <div class="space-y-2 text-sm text-slate-600">
+          <div class="flex justify-between"><span>Giá VND:</span><span id="lc-vnd" class="font-semibold">0</span></div>
+          <div class="flex justify-between"><span>Phí mua:</span><span id="lc-fee">0</span></div>
+          <div class="flex justify-between border-t pt-2 mt-2 font-bold text-lg text-yellow-700"><span>Tổng:</span><span id="lc-total">0</span></div>
+          <div class="flex justify-between text-xs"><span>Cọc (50%):</span><span id="lc-dep">0</span></div>
+          <div class="flex justify-between font-bold text-red-600 bg-red-50 p-2 rounded-lg mt-2 italic"><span>Còn lại:</span><span id="lc-rem">0</span></div>
+        </div>
+        <button onclick="addToTrack('LOCGC')" class="w-full mt-4 btn-yellow py-2 rounded-xl text-xs font-bold">CHỐT ĐƠN LOCGC</button>
+      </div>
+    </div>
+
+    <div class="card mb-8 overflow-hidden">
+      <div class="bg-slate-800 p-4 flex items-center justify-between text-white">
+        <h2 class="font-bold flex items-center"><i class="fas fa-bookmark text-yellow-400 mr-2"></i> MODEL TIỀM NĂNG (LƯU TẠM)</h2>
+        <span id="temp-count" class="bg-yellow-400 text-blue-900 px-2 py-0.5 rounded-full text-xs font-bold">0</span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 border-b">
+            <tr class="text-slate-500">
+              <th class="p-4 text-left">Sản phẩm</th>
+              <th class="p-4 text-left">Link</th>
+              <th class="p-4 text-left">Đơn vị</th>
+              <th class="p-4 text-right">Tổng tiền</th>
+              <th class="p-4 text-center">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="temp-table-body" class="divide-y">
+            </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card mb-8 overflow-hidden">
+      <div class="bg-blue-900 p-4 flex flex-col md:flex-row items-center justify-between gap-4 text-white">
+        <h2 class="font-bold flex items-center"><i class="fas fa-tasks text-blue-300 mr-2"></i> THEO DÕI ĐƠN HÀNG HIỆN CÓ</h2>
+        <div class="flex gap-4">
+          <div class="bg-white/10 px-4 py-2 rounded-xl text-sm border border-white/20">
+            Tổng thanh toán: <span id="selected-total-rem" class="text-yellow-400 font-bold text-lg">0</span>đ
+          </div>
+          <button onclick="bulkComplete()" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-xl text-xs font-bold transition">HOÀN THÀNH ĐÃ CHỌN</button>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 border-b">
+            <tr class="text-slate-500">
+              <th class="p-4"><input type="checkbox" id="master-check" onchange="toggleAllCheck(this)"></th>
+              <th class="p-4 text-left">Model / Link</th>
+              <th class="p-4 text-center">ĐV</th>
+              <th class="p-4 text-right">Còn lại</th>
+              <th class="p-4 text-center">Trạng thái</th>
+              <th class="p-4 text-left">Ghi chú</th>
+              <th class="p-4 text-center">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="track-table-body" class="divide-y"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card p-8 mb-20" id="profit-report-area">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-6">
+        <div>
+          <h2 class="text-2xl font-black text-slate-800 uppercase tracking-tight">Phân chia lợi nhuận</h2>
+          <p id="report-date" class="text-slate-400 text-sm"></p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-3 no-print">
+          <input type="number" id="total-profit" oninput="calculateProfit()" class="input-field w-48 border-accent-blue font-bold" placeholder="Tổng lợi nhuận (VND)">
+          <button onclick="addPartner()" class="btn-primary px-5 py-2 rounded-xl text-sm"><i class="fas fa-plus mr-2"></i>Thêm cổ đông</button>
+          <button onclick="captureReport()" class="bg-rose-500 text-white px-5 py-2 rounded-xl text-sm font-bold"><i class="fas fa-image mr-2"></i>XUẤT ẢNH BÁO CÁO</button>
+        </div>
+      </div>
+
+      <div id="partners-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"></div>
+
+      <div id="profit-results" class="bg-slate-900 text-white rounded-2xl p-6 shadow-xl">
+        </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  // THAY LINK /EXEC MỚI NHẤT CỦA BẠN VÀO ĐÂY
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHbqCVKdGH6ahFCp9CZ6PZWcq89OpCwwDNnhOkuVcTeQZxNs4lIMItlK4247AcBzK2/exec"; 
+
+async function apiCall(data) {
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors', // Cần thiết để gửi dữ liệu từ Vercel sang Google
+      body: JSON.stringify(data)
+    });
+  } catch (e) { console.error("Lỗi kết nối:", e); }
+}
+  let partners = [
+    { name: 'Sơn', capital: 0, workload: 0 },
+    { name: 'Nhân', capital: 0, workload: 0 },
+    { name: 'Thức', capital: 0, workload: 0 },
+    { name: 'Chấn', capital: 0, workload: 0 }
+  ];
+  let tempData = [];
+  let trackData = [];
+
+  async function checkLogin() {
+  if (document.getElementById('pass-input').value === 'dino2025') {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('main-app').classList.remove('hidden');
+    
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    document.getElementById('current-date').innerText = dateStr;
+    document.getElementById('report-date').innerText = "Kỳ báo cáo: " + dateStr;
+    
+    renderPartners();
+
+    // --- ĐOẠN MỚI THÊM: LẤY DỮ LIỆU TỪ SHEET ---
+    console.log("Đang tải dữ liệu từ Sheet...");
+    // Lưu ý: Vì chạy trên Vercel, ta phải gọi qua link /exec bằng fetch
+    try {
+      const response = await fetch(SCRIPT_URL + "?action=getAll");
+      const result = await response.json();
+      
+      tempData = result.temp || [];
+      trackData = result.track || [];
+      // --- HÀM CẬP NHẬT TRẠNG THÁI VÀ GHI CHÚ (Dán đoạn này vào) ---
+
+// --- HÀM CẬP NHẬT TRẠNG THÁI VÀ GHI CHÚ LÊN SHEET ---
+
+async function updateStatus(id, val) {
+  const item = trackData.find(i => i.id === id);
+  if (item) {
+    item.status = val;
+    // Gửi lệnh 'updateData' lên Google Sheets qua SCRIPT_URL
+    await apiCall({
+      action: 'updateData',
+      sheetName: 'Theo_Doi',
+      id: id,
+      status: item.status,
+      note: item.note || ""
+    });
+    console.log("Đã cập nhật trạng thái đơn " + id + " lên Sheet");
+  }
+}
+
+async function updateNote(id, val) {
+  const item = trackData.find(i => i.id === id);
+  if (item) {
+    item.note = val;
+    // Gửi lệnh 'updateData' lên Google Sheets qua SCRIPT_URL
+    await apiCall({
+      action: 'updateData',
+      sheetName: 'Theo_Doi',
+      id: id,
+      status: item.status || "Đã mua hàng",
+      note: item.note
+    });
+    console.log("Đã cập nhật ghi chú đơn " + id + " lên Sheet");
+  }
+}
+
+// -----------------------------------------------------------
+      renderTemp();
+      renderTrack();
+      console.log("Đã đồng bộ dữ liệu xong!");
+    } catch (e) {
+      console.error("Không thể lấy dữ liệu từ Sheet:", e);
+    }
+    // -----------------------------------------
+  } else { 
+    alert('Mật khẩu sai!'); 
+  }
+}
+
+  function calculatePrice() {
+  const priceInput = document.getElementById('price-cny');
+  const cny = parseFloat(priceInput.value) || 0;
+  
+  // --- TÍNH TOÁN CHO BEHAO ---
+  const bhVnd = cny * 3920;
+  const bhFee = (bhVnd * 0.03) + 170000;
+  const bhTotal = bhVnd + bhFee;
+  const bhDep = bhTotal * 0.65;
+  const bhRem = bhTotal - bhDep + 36000; // Số tiền còn lại
+
+  // --- TÍNH TOÁN CHO LOCGC ---
+  const lcVnd = cny * 3950;
+  const lcFee = (lcVnd * 0.035) + 135000;
+  const lcTotal = lcVnd + lcFee;
+  const lcDep = lcTotal * 0.5;
+  const lcRem = lcTotal - lcDep + 16000; // Số tiền còn lại
+
+  // --- HIỂN THỊ KẾT QUẢ ---
+  document.getElementById('bh-vnd').innerText = bhVnd.toLocaleString();
+  document.getElementById('bh-fee').innerText = bhFee.toLocaleString();
+  document.getElementById('bh-total').innerText = bhTotal.toLocaleString();
+  document.getElementById('bh-dep').innerText = bhDep.toLocaleString();
+  document.getElementById('bh-rem').innerText = bhRem.toLocaleString();
+
+  document.getElementById('lc-vnd').innerText = lcVnd.toLocaleString();
+  document.getElementById('lc-fee').innerText = lcFee.toLocaleString();
+  document.getElementById('lc-total').innerText = lcTotal.toLocaleString();
+  document.getElementById('lc-dep').innerText = lcDep.toLocaleString();
+  document.getElementById('lc-rem').innerText = lcRem.toLocaleString();
+
+  return { bhTotal, bhRem, lcTotal, lcRem };
+}
+
+  async function addToTrack(dv) {
+  let name = document.getElementById('model-name').value;
+  let link = document.getElementById('model-link').value;
+  const cny = parseFloat(document.getElementById('price-cny').value);
+  if (!cny) return alert("Vui lòng nhập giá tệ!");
+  
+  const prices = calculatePrice();
+  const rem = (dv === 'BEHAO' ? prices.bhRem : prices.lcRem);
+
+  // Nếu thiếu tên/link thì yêu cầu nhập (giữ nguyên logic của bạn)
+  if (!name || !link) {
+    if(!name) name = prompt("Tên Model còn thiếu:", "Sản phẩm mới");
+    if(!link) link = prompt("Dán Link sản phẩm vào đây:", "https://...");
+    if(name && link) {
+       const newItem = { id: Date.now(), name, link, dv, cny, rem, total: (dv==='BEHAO'?prices.bhTotal:prices.lcTotal) };
+       // LƯU VÀO SHEET (Lưu Tạm)
+       await apiCall({ action: 'addData', sheetName: 'Luu_Tam', rowData: [newItem.id, newItem.name, newItem.link, newItem.dv, cny, newItem.total, newItem.rem] });
+       tempData.push(newItem);
+       renderTemp();
+    }
+  } else {
+    const newItem = { id: Date.now(), name, link, dv, rem, status: 'Đã mua hàng', note: '' };
+    // LƯU VÀO SHEET (Theo Dõi)
+    await apiCall({ action: 'addData', sheetName: 'Theo_Doi', rowData: [newItem.id, newItem.name, newItem.link, newItem.dv, newItem.rem, newItem.status, ''] });
+    trackData.push(newItem);
+    renderTrack();
+  }
+}
+
+  function renderTemp() {
+    const tbody = document.getElementById('temp-table-body');
+    document.getElementById('temp-count').innerText = tempData.length;
+    tbody.innerHTML = tempData.map(item => `
+      <tr class="hover:bg-slate-50 transition">
+        <td class="p-4 font-bold text-slate-700">${item.name}</td>
+        <td class="p-4"><a href="${item.link}" target="_blank" class="text-blue-500 hover:text-blue-700"><i class="fas fa-external-link-alt"></i> Xem</a></td>
+        <td class="p-4"><span class="status-badge ${item.dv==='BEHAO'?'bg-blue-100 text-blue-700':'bg-yellow-100 text-yellow-800'}">${item.dv}</span></td>
+        <td class="p-4 text-right font-bold font-mono">${item.total.toLocaleString()}đ</td>
+        <td class="p-4 text-center space-x-2">
+          <button onclick="confirmTemp(${item.id})" class="text-green-500 hover:bg-green-50 p-2 rounded-lg"><i class="fas fa-check-circle"></i> Chốt</button>
+          <button onclick="deleteTemp(${item.id})" class="text-red-400 hover:bg-red-50 p-2 rounded-lg"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  async function confirmTemp(id) {
+  const idx = tempData.findIndex(i => i.id === id);
+  const item = tempData[idx];
+  
+  // Gửi lệnh sang Google Sheet: Thêm vào Theo_Doi và Xóa ở Luu_Tam
+  await apiCall({ action: 'addData', sheetName: 'Theo_Doi', rowData: [item.id, item.name, item.link, item.dv, item.rem, 'Đã mua hàng', ''] });
+  await apiCall({ action: 'deleteData', sheetName: 'Luu_Tam', id: id });
+
+  trackData.push({ ...item, status: 'Đã mua hàng', note: '' });
+  tempData.splice(idx, 1);
+  renderTemp(); renderTrack();
+}
+  async function deleteTemp(id) { 
+  if(confirm("Xác nhận xóa vĩnh viễn model này khỏi danh sách Lưu tạm?")) {
+    try {
+      // 1. Gửi lệnh xóa lên Google Sheets tại sheet Luu_Tam
+      await apiCall({ 
+        action: 'deleteData', 
+        sheetName: 'Luu_Tam', 
+        id: id 
+      });
+
+      // 2. Cập nhật giao diện web (Xóa dòng đó đi)
+      tempData = tempData.filter(i => i.id !== id); 
+      renderTemp(); 
+      
+      alert("Đã xóa dữ liệu trên hệ thống thành công!");
+    } catch (e) {
+      console.error("Lỗi khi xóa:", e);
+      alert("Có lỗi xảy ra khi xóa dữ liệu!");
+    }
+  }
+}
+
+  function renderTrack() {
+    const tbody = document.getElementById('track-table-body');
+    tbody.innerHTML = trackData.map(item => `
+      <tr class="hover:bg-blue-50/50 transition">
+        <td class="p-4 text-center"><input type="checkbox" class="track-check" data-id="${item.id}" data-rem="${item.rem}" onchange="calcSelectedRem()"></td>
+        <td class="p-4">
+          <div class="font-bold text-slate-800">${item.name}</div>
+          <div class="text-[10px] text-blue-500 truncate max-w-[150px] italic">${item.link}</div>
+        </td>
+        <td class="p-4 text-center text-[10px] font-bold">${item.dv}</td>
+        <td class="p-4 text-right font-bold text-rose-600 font-mono">${item.rem.toLocaleString()}đ</td>
+        <td class="p-4 text-center">
+          <select onchange="updateStatus(${item.id}, this.value)" class="text-[10px] bg-white border rounded px-2 py-1 outline-none">
+            <option ${item.status==='Đã mua hàng'?'selected':''}>Đã mua hàng</option>
+            <option ${item.status==='Đã về đến VN'?'selected':''}>Đã về đến VN</option>
+            <option ${item.status==='Đang vận chuyển'?'selected':''}>Đang vận chuyển</option>
+            <option ${item.status==='Đã nhận hàng'?'selected':''}>Đã nhận hàng</option>
+          </select>
+        </td>
+        <td class="p-4"><input type="text" value="${item.note}" onchange="updateNote(${item.id}, this.value)" placeholder="..." class="bg-transparent border-b border-dashed border-slate-300 w-full text-xs"></td>
+        <td class="p-4 text-center">
+          <button onclick="completeOrder(${item.id})" class="bg-blue-600 text-white px-3 py-1 rounded-lg text-[10px] font-bold">HOÀN THÀNH</button>
+        </td>
+      </tr>
+    `).join('');
+    calcSelectedRem();
+  }
+
+  function toggleAllCheck(master) {
+    document.querySelectorAll('.track-check').forEach(cb => cb.checked = master.checked);
+    calcSelectedRem();
+  }
+
+  function calcSelectedRem() {
+    let total = 0;
+    document.querySelectorAll('.track-check:checked').forEach(cb => total += parseFloat(cb.getAttribute('data-rem')));
+    document.getElementById('selected-total-rem').innerText = total.toLocaleString();
+  }
+
+  async function bulkComplete() {
+  const selectedCheckboxes = document.querySelectorAll('.track-check:checked');
+  const selectedIds = Array.from(selectedCheckboxes).map(cb => parseInt(cb.getAttribute('data-id')));
+  
+  if (selectedIds.length === 0) return alert("Vui lòng chọn ít nhất 1 đơn!");
+  
+  if (confirm(`Hoàn thành và xóa ${selectedIds.length} đơn đã chọn khỏi Sheet?`)) {
+    // Chạy vòng lặp để xóa từng ID trong Sheet
+    for (let id of selectedIds) {
+      await apiCall({
+        action: 'deleteData',
+        sheetName: 'Theo_Doi',
+        id: id
+      });
+    }
+
+    // Cập nhật lại giao diện sau khi xóa xong
+    trackData = trackData.filter(i => !selectedIds.includes(i.id));
+    renderTrack();
+    document.getElementById('master-check').checked = false;
+    alert("Đã hoàn thành và đồng bộ dữ liệu với Sheet!");
+  }
+}
+
+  async function completeOrder(id) {
+  if (confirm("Xác nhận hoàn thành và xóa đơn này khỏi hệ thống?")) {
+    // 1. Gửi lệnh xóa lên Google Sheets
+    await apiCall({
+      action: 'deleteData',
+      sheetName: 'Theo_Doi',
+      id: id
+    });
+
+    // 2. Xóa khỏi giao diện web
+    trackData = trackData.filter(i => i.id !== id);
+    renderTrack();
+  }
+}
+
+  // PHẦN LỢI NHUẬN & XUẤT ẢNH
+  function renderPartners() {
+    const container = document.getElementById('partners-container');
+    container.innerHTML = partners.map((p, idx) => `
+      <div class="card p-5 border-l-4 border-yellow-400">
+        <div class="flex justify-between mb-3"><span class="font-bold text-slate-800">${p.name}</span><i class="fas fa-user-circle text-slate-300"></i></div>
+        <div class="space-y-3">
+          <div><label class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Cổ phần (VND)</label>
+          <input type="number" oninput="updatePartner(${idx}, 'capital', this.value)" class="w-full font-bold border-b border-slate-200 outline-none" value="${p.capital}"></div>
+          <div><label class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">% Công việc</label>
+          <input type="number" oninput="updatePartner(${idx}, 'workload', this.value)" class="w-full font-bold border-b border-slate-200 outline-none text-blue-600" value="${p.workload}"></div>
+        </div>
+      </div>
+    `).join('');
+    calculateProfit();
+  }
+
+  function updatePartner(idx, key, val) { partners[idx][key] = parseFloat(val) || 0; calculateProfit(); }
+  function addPartner() { const n = prompt("Tên cổ đông:"); if(n) { partners.push({name:n, capital:0, workload:0}); renderPartners(); } }
+
+  function calculateProfit() {
+    const totalP = parseFloat(document.getElementById('total-profit').value) || 0;
+    const p60 = totalP * 0.6, p40 = totalP * 0.4;
+    const totalCap = partners.reduce((s, p) => s + p.capital, 0), totalWork = partners.reduce((s, p) => s + p.workload, 0);
+
+    let html = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 opacity-70">
+      <div class="text-xs">60% Theo cổ phần: ${p60.toLocaleString()}đ</div>
+      <div class="text-xs md:text-right">40% Theo công sức: ${p40.toLocaleString()}đ</div>
+    </div><div class="space-y-3">`;
+
+    partners.forEach(p => {
+      const shareCap = totalCap > 0 ? (p.capital / totalCap) * p60 : 0;
+      const shareWork = totalWork > 0 ? (p.workload / totalWork) * p40 : 0;
+      const total = shareCap + shareWork;
+      html += `
+        <div class="flex justify-between items-center p-3 rounded-xl bg-white/5 border border-white/10">
+          <div><span class="font-bold text-yellow-400 text-lg">${p.name}</span><div class="text-[10px] opacity-50 italic">Vốn: ${shareCap.toLocaleString()} + Công: ${shareWork.toLocaleString()}</div></div>
+          <div class="text-xl font-black text-white">${total.toLocaleString()}đ</div>
+        </div>`;
+    });
+    document.getElementById('profit-results').innerHTML = html + `</div>`;
+  }
+
+  async function captureReport() {
+    const area = document.getElementById('profit-report-area');
+    // Ẩn các nút bấm trước khi chụp
+    document.querySelectorAll('.no-print').forEach(el => el.style.display = 'none');
+    
+    const canvas = await html2canvas(area, { backgroundColor: '#f1f5f9', scale: 2 });
+    const link = document.createElement('a');
+    link.download = `Bao-Cao-Dino-Mobile-${new Date().getTime()}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+
+    // Hiện lại nút bấm
+    document.querySelectorAll('.no-print').forEach(el => el.style.display = 'flex');
+  }
+</script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
