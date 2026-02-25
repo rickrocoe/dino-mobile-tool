@@ -170,7 +170,7 @@
               <div class="bg-blue-600 text-white px-3 py-1 rounded-lg text-xs font-black tracking-wider shadow-lg shadow-blue-500/30">BEHAO</div>
               <div class="text-right">
                 <div class="text-[10px] text-slate-400 font-bold uppercase">Tỷ giá</div>
-                <div class="text-blue-600 font-bold">3,920</div>
+                <div class="text-blue-600 font-bold">3,890</div>
               </div>
             </div>
 
@@ -403,7 +403,7 @@
     const cny = parseFloat(priceInput.value) || 0;
     
     // --- TÍNH TOÁN CHO BEHAO ---
-    const bhVnd = cny * 3920;
+    const bhVnd = cny * 3890;
     const bhFee = (bhVnd * 0.03) + 170000;
     const bhTotal = bhVnd + bhFee;
     const bhDep = bhTotal * 0.65;
@@ -670,4 +670,5 @@
 </script>
 </body>
 </html>
+
 
