@@ -5,6 +5,13 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 
+  if (e && e.parameter && e.parameter.action === 'getSaleTrack') {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    return ContentService
+      .createTextOutput(JSON.stringify({ saleTrack: getSheetRows(ss, 'Theo_Doi_Ban') }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
   return HtmlService.createTemplateFromFile('index')
     .evaluate()
     .setTitle('DINO MOBILE SYSTEM')
