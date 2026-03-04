@@ -448,11 +448,25 @@
         
         tempData = result.temp || [];
         trackData = result.track || [];
-        saleData = (result.saleTrack || []).map(normalizeSaleItem).filter(Boolean);
+
+        const salePayload = result.saleTrack || result.sale_track || result.sale || result.theo_doi_ban || [];
+        saleData = (Array.isArray(salePayload) ? salePayload : []).map(normalizeSaleItem).filter(Boolean);
+
+        if (saleData.length === 0) {
+          try {
+            const saleResp = await fetch(SCRIPT_URL + "?action=getSaleTrack");
+            const saleResult = await saleResp.json();
+            const fallbackSale = saleResult.saleTrack || saleResult.data || [];
+            saleData = (Array.isArray(fallbackSale) ? fallbackSale : []).map(normalizeSaleItem).filter(Boolean);
+          } catch (saleErr) {
+            console.warn('Không tải được saleTrack fallback:', saleErr);
+          }
+        }
+
         renderTemp();
         renderTrack();
         renderSaleTrack();
-        console.log("Đã đồng bộ dữ liệu xong!");
+        console.log("Đã đồng bộ dữ liệu xong!", { temp: tempData.length, track: trackData.length, sale: saleData.length });
       } catch (e) {
         console.error("Không thể lấy dữ liệu từ Sheet:", e);
       }
