@@ -1,4 +1,10 @@
 function doGet(e) {
+  if (e && e.parameter && e.parameter.action === 'health') {
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: true, service: 'dino-mobile-api' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
   if (e && e.parameter && e.parameter.action === 'getAll') {
     return ContentService
       .createTextOutput(JSON.stringify(getAllData()))
