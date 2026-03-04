@@ -69,10 +69,19 @@ function getAllData() {
 function getSheetRows(ss, sheetName) {
   const sheet = ss.getSheetByName(sheetName);
   if (!sheet) return [];
-  const lastRow = sheet.getLastRow();
-  const lastCol = sheet.getLastColumn();
-  if (lastRow < 2 || lastCol < 1) return [];
-  return sheet.getRange(2, 1, lastRow - 1, lastCol).getValues();
+
+  const values = sheet.getDataRange().getValues();
+  if (!values || values.length === 0) return [];
+
+  const firstCell = values[0][0];
+  const firstCellText = String(firstCell || '').trim().toLowerCase();
+  const hasHeader = firstCellText === 'id' || firstCellText === 'mã' || firstCellText === 'ma' || firstCellText === 'stt';
+
+  if (hasHeader) {
+    return values.slice(1);
+  }
+
+  return values;
 }
 
 function updateTrackData(sheetName, id, rowData) {
