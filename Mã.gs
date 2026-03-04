@@ -1,8 +1,3 @@
-diff --git a/Mã.gs b/Mã.gs
-index 47182b9e46d836ac6c1869c46f6776bb47142bca..02d8ad2a643fa73fb4fcc3b94bd5dfd7588d959f 100644
---- a/Mã.gs
-+++ b/Mã.gs
-@@ -1,51 +1,92 @@
 -function doGet() {
 -  return HtmlService.createTemplateFromFile('index')
 -    .evaluate()
@@ -147,3 +142,4 @@ index 47182b9e46d836ac6c1869c46f6776bb47142bca..02d8ad2a643fa73fb4fcc3b94bd5dfd7
 +  }
 +  return false;
 +}
+
