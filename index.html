@@ -312,7 +312,167 @@
         </table>
       </div>
     </div>
+<div class="glass-panel rounded-2xl shadow-card overflow-hidden mb-12 border border-purple-200 animate-enter" style="animation-delay: 0.25s">
+      <div class="bg-gradient-to-r from-purple-900 to-slate-900 p-5 flex flex-col md:flex-row justify-between items-center gap-4 text-white">
+        <h2 class="font-display font-bold text-lg flex items-center">
+          <i class="fas fa-store text-purple-400 mr-3"></i> THEO DÕI BÁN MÁY
+        </h2>
+        <button onclick="deleteAllSales()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-lg flex items-center gap-2">
+          <i class="fas fa-trash-alt"></i> XÓA TOÀN BỘ BẢNG
+        </button>
+      </div>
 
+      <div class="p-4 bg-purple-50/30 border-b border-purple-100 flex flex-wrap gap-4 items-end">
+        <div>
+          <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Model máy</label>
+          <input type="text" id="sale-name" class="input-modern rounded-xl px-4 py-2.5 text-sm w-48 font-medium text-slate-700" placeholder="Tên máy...">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Giá vốn (VNĐ)</label>
+          <input type="number" id="sale-cost" class="input-modern rounded-xl px-4 py-2.5 text-sm w-36 font-bold text-slate-700" placeholder="0">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Giá đăng bán (VNĐ)</label>
+          <input type="number" id="sale-listing" class="input-modern rounded-xl px-4 py-2.5 text-sm w-36 font-bold text-slate-700" placeholder="0">
+        </div>
+        <button onclick="addSales()" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg transition-all flex items-center gap-2">
+          <i class="fas fa-plus"></i> THÊM BÀI ĐĂNG
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left">
+          <thead class="text-xs text-slate-500 uppercase bg-purple-50/50 border-b border-purple-100">
+            <tr>
+              <th class="px-4 py-4 w-48">Model</th>
+              <th class="px-4 py-4 w-64 text-right">Tài chính (Vốn / Đăng / Chốt)</th>
+              <th class="px-4 py-4 w-40 text-center">Tình trạng</th>
+              <th class="px-4 py-4 text-right">Lợi nhuận</th>
+              <th class="px-4 py-4">Ghi chú đăng bài</th>
+              <th class="px-4 py-4 text-center">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="sales-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
+        </table>
+      </div>
+    </div>
+    ```
+
+**Thao tác 2: Xử lý chức năng (Javascript)**
+Bạn cuộn xuống **tận cùng** file `index.html`, ngay phía trên thẻ đóng `</script>`, và dán toàn bộ cụm logic này vào:
+
+```javascript
+  // KHAI BÁO BIẾN DỮ LIỆU
+  let salesData = [];
+
+  // ==========================================
+  // MODULE THEO DÕI BÁN HÀNG (SALES TRACKING)
+  // ==========================================
+
+  function renderSales() {
+    const tbody = document.getElementById('sales-table-body');
+    if(salesData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-slate-400 italic">Chưa có bài đăng nào</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = salesData.map(item => {
+      const expectedProfit = item.listingPrice - item.totalCost;
+      const actualProfit = (item.soldPrice > 0) ? (item.soldPrice - item.totalCost) : 0;
+      const profitDisplay = (item.soldPrice > 0) ? actualProfit : expectedProfit;
+      const profitClass = profitDisplay >= 0 ? 'text-emerald-500' : 'text-red-500';
+
+      return `
+      <tr class="hover:bg-purple-50/20 transition border-b border-slate-100">
+        <td class="px-4 py-4 font-bold text-slate-800">${item.name}</td>
+        <td class="px-4 py-4 text-right space-y-1">
+          <div class="text-[10px] text-slate-400">Vốn: <span class="text-slate-700 font-bold">${item.totalCost.toLocaleString()}</span></div>
+          <div class="text-[10px] text-purple-400">Đăng: <span class="text-purple-600 font-bold">${item.listingPrice.toLocaleString()}</span></div>
+          <div class="flex items-center justify-end gap-2 mt-1 pt-1 border-t border-slate-100">
+             <span class="text-[10px] font-bold text-rose-500 uppercase">Chốt:</span>
+             <input type="number" value="${item.soldPrice || ''}" onchange="updateSales(${item.id}, 'soldPrice', this.value)" placeholder="Giá chốt" class="w-24 bg-rose-50 border border-rose-100 rounded px-2 py-1 text-xs text-rose-600 font-bold outline-none focus:border-rose-400 text-right">
+          </div>
+        </td>
+        <td class="px-4 py-4">
+          <div class="relative">
+              <select onchange="updateSales(${item.id}, 'status', this.value)" class="text-xs bg-white border ${item.status==='Đã bán'?'border-emerald-300 text-emerald-700 bg-emerald-50':'border-slate-200 text-slate-600'} rounded-lg px-2 py-1.5 outline-none focus:border-purple-500 w-full appearance-none pr-6 cursor-pointer font-bold">
+                <option ${item.status==='Đã đăng bài'?'selected':''}>Đã đăng bài</option>
+                <option ${item.status==='Bán chậm'?'selected':''}>Bán chậm</option>
+                <option ${item.status==='Đã bán'?'selected':''}>Đã bán</option>
+              </select>
+          </div>
+        </td>
+        <td class="px-4 py-4 text-right">
+          <div class="font-display font-black ${profitClass}">${profitDisplay.toLocaleString()}</div>
+          <div class="text-[9px] uppercase font-bold text-slate-400">${item.soldPrice > 0 ? 'Thực tế' : 'Dự tính'}</div>
+        </td>
+        <td class="px-4 py-4 relative group">
+            <textarea onchange="updateSales(${item.id}, 'note', this.value)" placeholder="Nhập nội dung đăng..." class="w-full h-12 text-xs bg-slate-50 border border-slate-200 rounded p-2 outline-none focus:border-purple-400 resize-none text-slate-600">${item.note}</textarea>
+            <button onclick="copySalesNote(${item.id})" class="absolute right-6 bottom-6 bg-purple-100 text-purple-600 hover:bg-purple-600 hover:text-white w-6 h-6 rounded-md flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"><i class="fas fa-copy text-[10px]"></i></button>
+        </td>
+        <td class="px-4 py-4 text-center">
+          <button onclick="deleteSales(${item.id})" class="w-8 h-8 rounded-full bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition flex items-center justify-center mx-auto"><i class="fas fa-trash-alt"></i></button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  async function addSales() {
+    const name = document.getElementById('sale-name').value;
+    const totalCost = parseFloat(document.getElementById('sale-cost').value);
+    const listingPrice = parseFloat(document.getElementById('sale-listing').value);
+    
+    if(!name || isNaN(totalCost) || isNaN(listingPrice)) return alert("Vui lòng nhập Tên, Giá vốn và Giá đăng bán!");
+    const newItem = { id: Date.now(), name, totalCost, listingPrice, soldPrice: 0, status: 'Đã đăng bài', note: '', profit: (listingPrice - totalCost) };
+    
+    await google.script.run.addDataToSheet('Theo_Doi_Ban', [newItem.id, newItem.name, newItem.totalCost, newItem.listingPrice, newItem.soldPrice, newItem.status, newItem.note, newItem.profit]);
+    salesData.push(newItem);
+    renderSales();
+    
+    document.getElementById('sale-name').value = ''; document.getElementById('sale-cost').value = ''; document.getElementById('sale-listing').value = '';
+  }
+
+  async function updateSales(id, field, value) {
+    const item = salesData.find(i => i.id === id);
+    if(item) {
+      item[field] = field === 'soldPrice' ? (parseFloat(value) || 0) : value;
+      item.profit = (item.soldPrice > 0) ? (item.soldPrice - item.totalCost) : (item.listingPrice - item.totalCost);
+      
+      await google.script.run.deleteRow('Theo_Doi_Ban', id);
+      await google.script.run.addDataToSheet('Theo_Doi_Ban', [item.id, item.name, item.totalCost, item.listingPrice, item.soldPrice, item.status, item.note, item.profit]);
+      renderSales();
+    }
+  }
+
+  async function deleteSales(id) {
+    if(confirm("Xác nhận xóa máy này khỏi danh sách?")) {
+      await google.script.run.deleteRow('Theo_Doi_Ban', id);
+      salesData = salesData.filter(i => i.id !== id);
+      renderSales();
+    }
+  }
+
+  async function deleteAllSales() {
+    if(salesData.length === 0) return alert("Bảng hiện đang trống!");
+    if(confirm("NGUY HIỂM: Bạn có chắc chắn muốn xóa TOÀN BỘ dữ liệu?")) {
+      for (let item of salesData) { await google.script.run.deleteRow('Theo_Doi_Ban', item.id); }
+      salesData = []; renderSales(); alert("Đã xóa toàn bộ dữ liệu!");
+    }
+  }
+
+  function copySalesNote(id) {
+    const item = salesData.find(i => i.id === id);
+    if(item && item.note) navigator.clipboard.writeText(item.note).then(() => alert("Đã copy nội dung!"));
+  }
+  
+  // GỌI HÀM LẤY DỮ LIỆU KHI LOAD TRANG
+  google.script.run.withSuccessHandler(function(result) {
+      const rawSales = result.sales || [];
+      salesData = rawSales.map(r => ({
+         id: r[0], name: r[1], totalCost: r[2], listingPrice: r[3], soldPrice: r[4] || 0, status: r[5], note: r[6] || '', profit: r[7] || 0
+      }));
+      renderSales();
+  }).getAllData();
     <div class="bg-slate-900 rounded-3xl p-8 shadow-2xl relative overflow-hidden mb-20 animate-enter" style="animation-delay: 0.3s" id="profit-report-area">
       <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500 rounded-full blur-[100px] opacity-20 pointer-events-none"></div>
       <div class="absolute bottom-0 left-0 w-64 h-64 bg-yellow-500 rounded-full blur-[100px] opacity-10 pointer-events-none"></div>
@@ -670,6 +830,7 @@
 </script>
 </body>
 </html>
+
 
 
 
