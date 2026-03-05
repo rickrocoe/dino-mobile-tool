@@ -28,26 +28,83 @@ function deleteRow(sheetName, id) {
   return false;
 }
 
-// Hàm lấy toàn bộ dữ liệu (Đã thêm Theo_Doi_Ban)
+// Hàm lấy toàn bộ dữ liệu để hiển thị khi load lại trang
 function getAllData() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   return {
     temp: ss.getSheetByName('Luu_Tam').getDataRange().getValues().slice(1),
-    track: ss.getSheetByName('Theo_Doi').getDataRange().getValues().slice(1),
-    sales: ss.getSheetByName('Theo_Doi_Ban').getDataRange().getValues().slice(1) 
+    track: ss.getSheetByName('Theo_Doi').getDataRange().getValues().slice(1)
   };
 }
 
-// Hàm cập nhật ghi chú hoặc trạng thái (Giữ nguyên của bạn)
+// Hàm cập nhật ghi chú hoặc trạng thái
 function updateCell(sheetName, id, colIndex, newValue) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(sheetName);
   const data = sheet.getDataRange().getValues();
   for (let i = 1; i < data.length; i++) {
     if (data[i][0].toString() === id.toString()) {
-      sheet.getRange(i + 1, colIndex).setValue(newValue);
+      sheet.getRange(i + 1, colIndex + 1).setValue(newValue);
+      return true;
+    }
+  }
+}
+
+
+// ======================================================
+// MODULE MỚI: THEO DÕI BÁN MÁY
+// ======================================================
+
+// Lấy dữ liệu bảng bán máy
+function getSaleData() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName("Theo_Doi_Ban");
+  if (!sheet) return [];
+  return sheet.getDataRange().getValues().slice(1);
+}
+
+// Thêm model bán
+function addSaleRow(data) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName("Theo_Doi_Ban");
+
+  const expectedProfit = data.listingPrice - data.totalCost;
+  const realProfit = data.soldPrice - data.totalCost;
+
+  sheet.appendRow([
+    data.id,
+    data.name,
+    data.totalCost,
+    data.listingPrice,
+    data.soldPrice,
+    data.status,
+    data.note,
+    expectedProfit,
+    realProfit
+  ]);
+}
+
+// Xóa 1 model
+function deleteSaleRow(id) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName("Theo_Doi_Ban");
+  const data = sheet.getDataRange().getValues();
+
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0].toString() === id.toString()) {
+      sheet.deleteRow(i + 1);
       return true;
     }
   }
   return false;
+}
+
+// Xóa toàn bộ bảng bán máy
+function clearSaleTable() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName("Theo_Doi_Ban");
+  const lastRow = sheet.getLastRow();
+  if (lastRow > 1) {
+    sheet.deleteRows(2, lastRow - 1);
+  }
 }
