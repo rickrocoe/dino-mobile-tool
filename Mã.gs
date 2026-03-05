@@ -28,24 +28,26 @@ function deleteRow(sheetName, id) {
   return false;
 }
 
-// Hàm lấy toàn bộ dữ liệu để hiển thị khi load lại trang
+// Hàm lấy toàn bộ dữ liệu (Đã thêm Theo_Doi_Ban)
 function getAllData() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   return {
     temp: ss.getSheetByName('Luu_Tam').getDataRange().getValues().slice(1),
-    track: ss.getSheetByName('Theo_Doi').getDataRange().getValues().slice(1)
+    track: ss.getSheetByName('Theo_Doi').getDataRange().getValues().slice(1),
+    sales: ss.getSheetByName('Theo_Doi_Ban').getDataRange().getValues().slice(1) 
   };
 }
 
-// Hàm cập nhật ghi chú hoặc trạng thái
+// Hàm cập nhật ghi chú hoặc trạng thái (Giữ nguyên của bạn)
 function updateCell(sheetName, id, colIndex, newValue) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(sheetName);
   const data = sheet.getDataRange().getValues();
   for (let i = 1; i < data.length; i++) {
     if (data[i][0].toString() === id.toString()) {
-      sheet.getRange(i + 1, colIndex + 1).setValue(newValue);
+      sheet.getRange(i + 1, colIndex).setValue(newValue);
       return true;
     }
   }
+  return false;
 }
