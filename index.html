@@ -294,52 +294,6 @@
           <i class="fas fa-check-double"></i> HOÀN THÀNH ĐÃ CHỌN
         </button>
       </div>
-
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left">
-          <thead class="text-xs text-slate-500 uppercase bg-blue-50/50 border-b border-blue-100">
-            <tr>
-              <th class="px-4 py-4 w-10"><input type="checkbox" id="master-check" onchange="toggleAllCheck(this)" class="rounded text-blue-600 focus:ring-blue-500 cursor-pointer"></th>
-              <th class="px-4 py-4">Thông tin Model</th>
-              <th class="px-4 py-4 text-center">Đơn vị</th>
-              <th class="px-4 py-4 text-right">Còn lại</th>
-              <th class="px-4 py-4">Trạng thái</th>
-              <th class="px-4 py-4">Ghi chú</th>
-              <th class="px-4 py-4 text-center">Tác vụ</th>
-            </tr>
-          </thead>
-          <tbody id="track-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
-        </table>
-      </div>
-    </div>
-<div class="glass-panel rounded-2xl shadow-card overflow-hidden mb-12 border border-purple-200 animate-enter" style="animation-delay: 0.25s">
-      <div class="bg-gradient-to-r from-purple-900 to-slate-900 p-5 flex flex-col md:flex-row justify-between items-center gap-4 text-white">
-        <h2 class="font-display font-bold text-lg flex items-center">
-          <i class="fas fa-store text-purple-400 mr-3"></i> THEO DÕI BÁN MÁY
-        </h2>
-        <button onclick="deleteAllSales()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-lg flex items-center gap-2">
-          <i class="fas fa-trash-alt"></i> XÓA TOÀN BỘ BẢNG
-        </button>
-      </div>
-
-      <div class="p-4 bg-purple-50/30 border-b border-purple-100 flex flex-wrap gap-4 items-end">
-        <div>
-          <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Model máy</label>
-          <input type="text" id="sale-name" class="input-modern rounded-xl px-4 py-2.5 text-sm w-48 font-medium text-slate-700" placeholder="Tên máy...">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Giá vốn (VNĐ)</label>
-          <input type="number" id="sale-cost" class="input-modern rounded-xl px-4 py-2.5 text-sm w-36 font-bold text-slate-700" placeholder="0">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Giá đăng bán (VNĐ)</label>
-          <input type="number" id="sale-listing" class="input-modern rounded-xl px-4 py-2.5 text-sm w-36 font-bold text-slate-700" placeholder="0">
-        </div>
-        <button onclick="addSales()" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg transition-all flex items-center gap-2">
-          <i class="fas fa-plus"></i> THÊM BÀI ĐĂNG
-        </button>
-      </div>
-
       <div class="overflow-x-auto">
         <table class="w-full text-sm text-left">
           <thead class="text-xs text-slate-500 uppercase bg-purple-50/50 border-b border-purple-100">
@@ -995,6 +949,7 @@ renderSale()
 </script>
 </body>
 </html>
+
 
 
 
