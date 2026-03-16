@@ -407,14 +407,14 @@
     const bhFee = (bhVnd * 0.03) + 170000;
     const bhTotal = bhVnd + bhFee;
     const bhDep = bhTotal * 0.65;
-    const bhRem = bhTotal - bhDep + 36000; 
+    const bhRem = bhTotal - bhDep; 
 
     // --- TÍNH TOÁN CHO LOCGC ---
     const lcVnd = cny * 3980;
     const lcFee = (lcVnd * 0.035) + 185000;
     const lcTotal = lcVnd + lcFee;
     const lcDep = lcTotal * 0.5;
-    const lcRem = lcTotal - lcDep + 30000; 
+    const lcRem = lcTotal - lcDep; 
 
     // --- HIỂN THỊ KẾT QUẢ ---
     document.getElementById('bh-vnd').innerText = bhVnd.toLocaleString();
