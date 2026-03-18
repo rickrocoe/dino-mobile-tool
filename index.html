@@ -152,7 +152,7 @@
             <div class="scanline"></div>
             <span class="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-6 block">Nhập thông tin</span>
             <div class="space-y-5">
-              <input type="text" id="model-name" class="input-nexus" placeholder="Tên Model / SKU">
+              <input type="text" id="model-name" class="input-nexus" placeholder="Tên Model">
               <input type="text" id="model-link" class="input-nexus" placeholder="Link sản phẩm">
               <div class="pt-5">
                 <label class="text-[9px] font-black text-slate-400 block mb-2 uppercase">Giá (CNY)</label>
@@ -292,7 +292,7 @@
             
             <div class="flex flex-wrap gap-5 no-print">
                 <div class="relative">
-                    <label class="text-[10px] font-black text-slate-400 uppercase block mb-3 ml-2">Tổng lợi nhuận (VND)</label>
+                    <label class="text-[11px] font-black text-slate-400 uppercase block mb-3 ml-2">Tổng lợi nhuận (VND)</label>
                     <input type="number" id="total-profit" oninput="calculateProfit()" class="w-72 nexus-card !rounded-2xl !p-5 text-3xl font-mono font-black text-blue-600 border-2 border-slate-50" placeholder="0">
                 </div>
                 <div class="flex items-end gap-3">
@@ -468,7 +468,7 @@
         <td class="px-4 py-6 text-center"><span class="text-[9px] font-black px-2 py-1 border rounded ${item.dv==='BEHAO'?'text-blue-600 border-blue-200':'text-slate-900 border-slate-900'}">${item.dv}</span></td>
         <td class="px-6 py-6 text-right font-mono font-black text-blue-600">${item.rem.toLocaleString()}</td>
         <td class="px-6 py-6">
-          <select onchange="updateStatus(${item.id}, this.value)" class="text-[10px] font-black bg-slate-100/50 border-none rounded-lg px-2 py-2 outline-none">
+          <select onchange="updateStatus(${item.id}, this.value)" class="text-[12px] font-black bg-slate-100/50 border-none rounded-lg px-2 py-2 outline-none">
             <option ${item.status==='Đã mua hàng'?'selected':''}>Đã mua hàng</option>
             <option ${item.status==='Đã về đến VN'?'selected':''}>Đã về đến VN</option>
             <option ${item.status==='Đang vận chuyển'?'selected':''}>Đang vận chuyển</option>
