@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DINO MOBILE MANAGER VER 2</title>
+  <title>DINO MOBILE MANAGER VER 2 - UPDATED</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -88,159 +88,27 @@
     }
     @keyframes scan { 0% { top: 0% } 100% { top: 100% } }
 
-    /* Fix table scrolling on mobile */
     .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    /* LOGO TECH ANIMATIONS */
+    @keyframes rotateOuter { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes rotateInner { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+    @keyframes mechanicalPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+
+    .logo-tech { position: relative; width: 110px; height: 110px; margin: 0 auto 32px; }
+    .ring-outer { position: absolute; inset: 0; border: 2px dashed rgba(255,255,255,0.2); border-radius: 50%; animation: rotateOuter 8s linear infinite; }
+    .ring-inner { position: absolute; inset: 12px; border: 2px solid rgba(255,255,255,0.4); border-radius: 50%; animation: rotateInner 5s linear infinite; }
+    .logo-core { position: absolute; inset: 22px; display: flex; align-items: center; justify-content: center; color: white; animation: mechanicalPulse 2.5s ease-in-out infinite; }
+    .logo-core svg { width: 100%; height: 100%; }
   </style>
 </head>
 <body class="text-slate-900">
 
-<style>
-/* Glitch lệch lớp */
-@keyframes glitchShift {
-  0% { transform: translate(0,0); }
-  20% { transform: translate(-1px,1px); }
-  40% { transform: translate(-1px,-1px); }
-  60% { transform: translate(1px,1px); }
-  80% { transform: translate(1px,-1px); }
-  100% { transform: translate(0,0); }
-}
-
-/* Scan line chạy ngang */
-@keyframes scanLine {
-  0% { top: 0%; opacity: 0; }
-  10% { opacity: 0.4; }
-  50% { top: 100%; opacity: 0.2; }
-  100% { top: 100%; opacity: 0; }
-}
-
-/* Nhấp nháy digital */
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  45% { opacity: 0.85; }
-  50% { opacity: 0.6; }
-  55% { opacity: 0.9; }
-}
-
-/* Wrapper */
-.logo-wrap {
-  position: relative;
-  width: 96px;
-  height: 96px;
-}
-
-/* SVG chính */
-.logo-main {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  color: white;
-  animation: flicker 2.5s infinite;
-}
-
-/* Lớp glitch đỏ */
-.logo-red {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  color: red;
-  opacity: 0.4;
-  mix-blend-mode: screen;
-  animation: glitchShift 0.3s infinite;
-}
-
-/* Lớp glitch xanh */
-.logo-blue {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  color: cyan;
-  opacity: 0.4;
-  mix-blend-mode: screen;
-  animation: glitchShift 0.25s infinite reverse;
-}
-
-/* Scan line */
-.scan-line {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: white;
-  opacity: 0.2;
-  animation: scanLine 2s linear infinite;
-}
-<style>
-/* Vòng ngoài quay (rotor) */
-@keyframes rotateOuter {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* Vòng trong quay ngược */
-@keyframes rotateInner {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0deg); }
-}
-
-/* Nhịp cơ khí nhẹ */
-@keyframes mechanicalPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.04); }
-}
-
-/* Wrapper */
-.logo-tech {
-  position: relative;
-  width: 110px;
-  height: 110px;
-  margin: 0 auto 32px;
-}
-
-/* Vòng ngoài */
-.ring-outer {
-  position: absolute;
-  inset: 0;
-  border: 2px dashed rgba(255,255,255,0.2);
-  border-radius: 50%;
-  animation: rotateOuter 8s linear infinite;
-}
-
-/* Vòng trong */
-.ring-inner {
-  position: absolute;
-  inset: 12px;
-  border: 2px solid rgba(255,255,255,0.4);
-  border-radius: 50%;
-  animation: rotateInner 5s linear infinite;
-}
-
-/* Logo chính */
-.logo-core {
-  position: absolute;
-  inset: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  animation: mechanicalPulse 2.5s ease-in-out infinite;
-}
-
-/* SVG */
-.logo-core svg {
-  width: 100%;
-  height: 100%;
-}
-</style>
-
 <div id="lock-screen">
     <div class="text-center w-full max-w-sm px-6">
-
-        <!-- LOGO TECH -->
         <div class="logo-tech">
-
             <div class="ring-outer"></div>
             <div class="ring-inner"></div>
-
             <div class="logo-core">
                 <svg viewBox="0 0 361.81 351.4">
                     <path fill="currentColor" d="M361.81,16.3h-17.43V0H198.12l-0.11,16.98h-17.87l0.4,105.28h-18.42v15.62h-27.17v17.21
@@ -251,31 +119,11 @@
                     h89.89V16.3H361.81z M237.28,43.24h-23.77V23.77h23.77V43.24z"/>
                 </svg>
             </div>
-
         </div>
-
-        <h2 class="text-white text-xl font-black uppercase tracking-widest mb-2">
-            Khóa truy cập Dino
-        </h2>
-
-        <p class="text-slate-500 text-[10px] mb-8 uppercase tracking-widest">
-            Mật khẩu bảo mật
-        </p>
-
-        <input 
-            type="password" 
-            id="sys-pass" 
-            class="w-full bg-slate-800 border-none text-white text-center text-2xl tracking-[0.5em] p-4 rounded-2xl mb-4 outline-none focus:ring-2 ring-blue-500" 
-            placeholder="••••••••"
-        >
-
-        <button 
-            onclick="unlockSystem()" 
-            class="w-full bg-blue-600 text-white font-black py-4 rounded-2xl hover:bg-blue-500 transition-all uppercase text-[10px] tracking-widest"
-        >
-            Truy cập
-        </button>
-
+        <h2 class="text-white text-xl font-black uppercase tracking-widest mb-2">Khóa truy cập Dino</h2>
+        <p class="text-slate-500 text-[10px] mb-8 uppercase tracking-widest">Mật khẩu bảo mật</p>
+        <input type="password" id="sys-pass" class="w-full bg-slate-800 border-none text-white text-center text-2xl tracking-[0.5em] p-4 rounded-2xl mb-4 outline-none focus:ring-2 ring-blue-500" placeholder="••••••••">
+        <button onclick="unlockSystem()" class="w-full bg-blue-600 text-white font-black py-4 rounded-2xl hover:bg-blue-500 transition-all uppercase text-[10px] tracking-widest">Truy cập</button>
     </div>
 </div>
 
@@ -284,21 +132,20 @@
     <div class="max-w-7xl mx-auto nexus-card px-8 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md border-none shadow-xl shadow-slate-200/50">
       <div class="flex items-center gap-4">
         <div class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white shadow-lg">
-  <svg viewBox="0 0 361.81 351.4" class="w-6 h-6">
-    <path fill="currentColor" d="M361.81,16.3h-17.43V0H198.12l-0.11,16.98h-17.87l0.4,105.28h-18.42v15.62h-27.17v17.21
-    l-26.26-0.45v16.53l-18.79-0.06v16.36l-34.24-0.17l0.06-16.59l-17.21-0.06V154.4l-18.34-0.23v-32.09l-20.15-0.06v99.4
-    l17.66,0.45v15.4l17.66-0.06v16.58l18.57-0.23v16.98H71.8v16.08l18.34,0.06v64.7h37.58v-17.43l-17.21-0.23v-14.49h17.43
-    v-15.62l18.79-0.23v-16.53l15.4-0.23v16.08h18.01v48.68h38.14v-17.89h-18.11L199.94,271h18.23l-0.11-16.53h17.89
-    l0.23-24.23h18.57l-0.68-56.6h15.62l0.23,15.62h20.38l-0.45-34.42h-35.32l-0.68-30.57h72.23v-18.79h-53.89l-0.23-13.13
-    h89.89V16.3H361.81z M237.28,43.24h-23.77V23.77h23.77V43.24z"/>
-  </svg>
-</div>
+          <svg viewBox="0 0 361.81 351.4" class="w-6 h-6">
+            <path fill="currentColor" d="M361.81,16.3h-17.43V0H198.12l-0.11,16.98h-17.87l0.4,105.28h-18.42v15.62h-27.17v17.21
+            l-26.26-0.45v16.53l-18.79-0.06v16.36l-34.24-0.17l0.06-16.59l-17.21-0.06V154.4l-18.34-0.23v-32.09l-20.15-0.06v99.4
+            l17.66,0.45v15.4l17.66-0.06v16.58l18.57-0.23v16.98H71.8v16.08l18.34,0.06v64.7h37.58v-17.43l-17.21-0.23v-14.49h17.43
+            v-15.62l18.79-0.23v-16.53l15.4-0.23v16.08h18.01v48.68h38.14v-17.89h-18.11L199.94,271h18.23l-0.11-16.53h17.89
+            l0.23-24.23h18.57l-0.68-56.6h15.62l0.23,15.62h20.38l-0.45-34.42h-35.32l-0.68-30.57h72.23v-18.79h-53.89l-0.23-13.13
+            h89.89V16.3H361.81z M237.28,43.24h-23.77V23.77h23.77V43.24z"/>
+          </svg>
+        </div>
         <div>
           <h1 class="text-lg font-black tracking-tighter uppercase">DINO MOBILE <span class="text-blue-600">MANAGER</span></h1>
           <span id="live-clock" class="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest">SYSTEM_LIVE</span>
         </div>
       </div>
-      
       <div class="flex items-center gap-6">
           <div class="text-right border-r pr-6 border-slate-100 hidden sm:block">
               <span class="block text-[8px] font-black text-slate-400 uppercase">Vốn điều lệ</span>
@@ -312,7 +159,6 @@
   </header>
 
   <main class="max-w-7xl mx-auto px-6 pb-20">
-    
     <div class="flex justify-center gap-2 mb-12">
       <button onclick="switchModule('module-intake')" id="tab-intake" class="btn-nexus active">
         <i class="fas fa-plus-square"></i> Định Giá
@@ -469,7 +315,6 @@
                 <h2 class="text-6xl font-black text-slate-900 italic uppercase tracking-tighter">DINO<span class="text-slate-200">_Bro</span></h2>
                 <p id="report-date" class="text-slate-400 text-[10px] font-bold uppercase mt-4 font-mono tracking-widest"></p>
             </div>
-            
             <div class="flex flex-wrap gap-5 no-print">
                 <div class="relative">
                     <label class="text-[11px] font-black text-slate-400 uppercase block mb-3 ml-2">Tổng lợi nhuận (VND)</label>
@@ -481,20 +326,17 @@
                 </div>
             </div>
         </div>
-
         <div id="partners-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-16"></div>
         <div id="profit-results" class="bg-slate-50/50 rounded-[40px] p-12 border-2 border-dashed border-slate-100 shadow-inner"></div>
       </div>
     </div>
-
   </main>
 </div>
 
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHbqCVKdGH6ahFCp9CZ6PZWcq89OpCwwDNnhOkuVcTeQZxNs4lIMItlK4247AcBzK2/exec"; 
-  const SYS_KEY = "dino2025"; // Mật khẩu cập nhật
+  const SYS_KEY = "dino2025";
 
-  // --- SECURITY ---
   function unlockSystem() {
     const pass = document.getElementById('sys-pass').value;
     if (pass === SYS_KEY) {
@@ -509,7 +351,6 @@
     }
   }
 
-  // --- TAB SWITCHER (FIXED) ---
   function switchModule(moduleId) {
     document.querySelectorAll('.btn-nexus').forEach(btn => {
         btn.classList.remove('active', 'text-slate-900');
@@ -529,7 +370,6 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // --- LOGIC GỐC ---
   let partners = [
     { name: 'Sơn', capital: 0, workload: 0 },
     { name: 'Nhân', capital: 0, workload: 0 },
@@ -636,19 +476,28 @@
 
   async function deleteTemp(id) { if(confirm("Xác nhận xóa?")) { await apiCall({ action: 'deleteData', sheetName: 'Luu_Tam', id: id }); tempData = tempData.filter(i => i.id !== id); renderTemp(); } }
 
+  // --- CẬP NHẬT MÀU XANH DƯƠNG CHO TRẠNG THÁI "ĐÃ BÁN" ---
   function renderTrack() {
     const tbody = document.getElementById('track-table-body');
-    tbody.innerHTML = trackData.map(item => `
-      <tr class="hover:bg-blue-50/20 transition-colors">
-        <td class="px-8 py-6 text-center"><input type="checkbox" class="track-check w-5 h-5 accent-blue-600 rounded" data-id="${item.id}" data-rem="${item.rem}" onchange="calcSelectedRem()"></td>
-        <td class="px-6 py-6">
-          <div class="font-bold text-slate-900 text-sm">${item.name}</div>
-          <a href="${item.link}" target="_blank" class="text-[9px] text-slate-400 font-bold hover:text-blue-600 font-mono">Link gốc</a>
+    tbody.innerHTML = trackData.map(item => {
+      const isSold = item.status === 'Đã bán';
+      const rowColorClass = isSold ? 'text-blue-600 font-bold' : 'text-slate-900';
+      
+      return `
+      <tr class="hover:bg-blue-50/20 transition-colors ${rowColorClass}">
+        <td class="px-8 py-6 text-center">
+            <input type="checkbox" class="track-check w-5 h-5 accent-blue-600 rounded" data-id="${item.id}" data-rem="${item.rem}" onchange="calcSelectedRem()">
         </td>
-        <td class="px-4 py-6 text-center"><span class="text-[9px] font-black px-2 py-1 border rounded ${item.dv==='BEHAO'?'text-blue-600 border-blue-200':'text-slate-900 border-slate-900'}">${item.dv}</span></td>
-        <td class="px-6 py-6 text-right font-mono font-black text-blue-600">${item.rem.toLocaleString()}</td>
         <td class="px-6 py-6">
-          <select onchange="updateStatus(${item.id}, this.value)" class="text-[12px] font-black bg-slate-100/50 border-none rounded-lg px-2 py-2 outline-none">
+          <div class="font-bold text-sm">${item.name}</div>
+          <a href="${item.link}" target="_blank" class="text-[9px] ${isSold ? 'text-blue-400' : 'text-slate-400'} font-bold hover:text-blue-600 font-mono">Link gốc</a>
+        </td>
+        <td class="px-4 py-6 text-center">
+            <span class="text-[9px] font-black px-2 py-1 border rounded ${item.dv==='BEHAO'?'text-blue-600 border-blue-200':'text-slate-900 border-slate-900'}">${item.dv}</span>
+        </td>
+        <td class="px-6 py-6 text-right font-mono font-black ${isSold ? 'text-blue-600' : 'text-blue-600'}">${item.rem.toLocaleString()}</td>
+        <td class="px-6 py-6">
+          <select onchange="updateStatus(${item.id}, this.value)" class="text-[12px] font-black bg-slate-100/50 border-none rounded-lg px-2 py-2 outline-none ${isSold ? 'text-blue-600' : ''}">
             <option ${item.status==='Đã mua hàng'?'selected':''}>Đã mua hàng</option>
             <option ${item.status==='Đã về đến VN'?'selected':''}>Đã về đến VN</option>
             <option ${item.status==='Đang vận chuyển'?'selected':''}>Đang vận chuyển</option>
@@ -657,17 +506,27 @@
             <option ${item.status==='Đã bán'?'selected':''}>Đã bán</option>
           </select>
         </td>
-        <td class="px-6 py-6"><input type="text" value="${item.note}" onchange="updateNote(${item.id}, this.value)" class="bg-transparent border-b border-transparent focus:border-blue-500 w-full text-[11px] outline-none font-medium"></td>
+        <td class="px-6 py-6"><input type="text" value="${item.note}" onchange="updateNote(${item.id}, this.value)" class="bg-transparent border-b border-transparent focus:border-blue-500 w-full text-[11px] outline-none font-medium ${isSold ? 'text-blue-600' : ''}"></td>
         <td class="px-8 py-6 text-center"><button onclick="completeOrder(${item.id})" class="text-slate-200 hover:text-emerald-500"><i class="fas fa-check-double text-xl"></i></button></td>
-      </tr>`).join('');
+      </tr>`;
+    }).join('');
     calcSelectedRem();
   }
 
-  async function updateStatus(id, val) { const i = trackData.find(x => x.id === id); if(i) { i.status = val; await apiCall({ action: 'updateData', sheetName: 'Theo_Doi', id, status: val, note: i.note || "" }); } }
+  async function updateStatus(id, val) { 
+    const i = trackData.find(x => x.id === id); 
+    if(i) { 
+        i.status = val; 
+        renderTrack(); // Cập nhật giao diện ngay khi đổi trạng thái
+        await apiCall({ action: 'updateData', sheetName: 'Theo_Doi', id, status: val, note: i.note || "" }); 
+    } 
+  }
+
   async function updateNote(id, val) { const i = trackData.find(x => x.id === id); if(i) { i.note = val; await apiCall({ action: 'updateData', sheetName: 'Theo_Doi', id, status: i.status, note: val }); } }
   function toggleAllCheck(m) { document.querySelectorAll('.track-check').forEach(cb => cb.checked = m.checked); calcSelectedRem(); }
   function calcSelectedRem() { let t = 0; document.querySelectorAll('.track-check:checked').forEach(cb => t += parseFloat(cb.getAttribute('data-rem'))); document.getElementById('selected-total-rem').innerText = t.toLocaleString(); }
   async function completeOrder(id) { if(confirm("Xác nhận hoàn tất?")) { await apiCall({ action: 'deleteData', sheetName: 'Theo_Doi', id }); trackData = trackData.filter(i => i.id !== id); renderTrack(); } }
+  
   async function bulkComplete() {
     const ids = Array.from(document.querySelectorAll('.track-check:checked')).map(cb => parseInt(cb.getAttribute('data-id')));
     if(ids.length > 0 && confirm(`Bulk purge ${ids.length} units?`)) {
