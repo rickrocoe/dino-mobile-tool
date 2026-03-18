@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DINO MOBILE - NEXUS SUPREME</title>
+  <title>DINO MOBILE MANAGER VER 2</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -99,10 +99,10 @@
         <div class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center text-white text-3xl mx-auto mb-8 shadow-2xl animate-pulse">
             <i class="fas fa-lock"></i>
         </div>
-        <h2 class="text-white text-xl font-black uppercase tracking-widest mb-2">Nexus Auth</h2>
-        <p class="text-slate-500 text-[10px] mb-8 uppercase tracking-widest">Identification Required</p>
+        <h2 class="text-white text-xl font-black uppercase tracking-widest mb-2">Khóa truy cập Dino</h2>
+        <p class="text-slate-500 text-[10px] mb-8 uppercase tracking-widest">Mật khẩu bảo mật</p>
         <input type="password" id="sys-pass" class="w-full bg-slate-800 border-none text-white text-center text-2xl tracking-[0.5em] p-4 rounded-2xl mb-4 outline-none focus:ring-2 ring-blue-500" placeholder="••••••••">
-        <button onclick="unlockSystem()" class="w-full bg-blue-600 text-white font-black py-4 rounded-2xl hover:bg-blue-500 transition-all uppercase text-[10px] tracking-widest">Authorize Access</button>
+        <button onclick="unlockSystem()" class="w-full bg-blue-600 text-white font-black py-4 rounded-2xl hover:bg-blue-500 transition-all uppercase text-[10px] tracking-widest">Truy cập</button>
     </div>
 </div>
 
@@ -114,15 +114,15 @@
           <i class="fas fa-bolt-lightning"></i>
         </div>
         <div>
-          <h1 class="text-lg font-black tracking-tighter uppercase">DINO MOBILE <span class="text-blue-600">NEXUS</span></h1>
+          <h1 class="text-lg font-black tracking-tighter uppercase">DINO MOBILE <span class="text-blue-600">MANAGER</span></h1>
           <span id="live-clock" class="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest">SYSTEM_LIVE</span>
         </div>
       </div>
       
       <div class="flex items-center gap-6">
           <div class="text-right border-r pr-6 border-slate-100 hidden sm:block">
-              <span class="block text-[8px] font-black text-slate-400 uppercase">Rate Index</span>
-              <span class="font-mono font-bold text-slate-900">3,950 <span class="text-blue-600">₫/¥</span></span>
+              <span class="block text-[8px] font-black text-slate-400 uppercase">Vốn điều lệ</span>
+              <span class="font-mono font-bold text-slate-900">9,700 <span class="text-blue-600">tỷ/ VND</span></span>
           </div>
           <button onclick="location.reload()" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors text-slate-400">
             <i class="fas fa-power-off text-sm"></i>
@@ -135,13 +135,13 @@
     
     <div class="flex justify-center gap-2 mb-12">
       <button onclick="switchModule('module-intake')" id="tab-intake" class="btn-nexus active">
-        <i class="fas fa-plus-square"></i> Intake
+        <i class="fas fa-plus-square"></i> Định Giá
       </button>
       <button onclick="switchModule('module-logistics')" id="tab-logistics" class="btn-nexus text-slate-500">
-        <i class="fas fa-compass"></i> Radar
+        <i class="fas fa-compass"></i> Đơn Hàng
       </button>
       <button onclick="switchModule('module-treasury')" id="tab-treasury" class="btn-nexus text-slate-500">
-        <i class="fas fa-vault"></i> Treasury
+        <i class="fas fa-vault"></i> Lợi Nhuận
       </button>
     </div>
 
@@ -150,12 +150,12 @@
         <div class="lg:col-span-4">
           <div class="nexus-card p-8 overflow-hidden">
             <div class="scanline"></div>
-            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6 block">Input Terminal</span>
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6 block">Nhập thông tin</span>
             <div class="space-y-5">
               <input type="text" id="model-name" class="input-nexus" placeholder="Product Name / SKU">
               <input type="text" id="model-link" class="input-nexus text-blue-600 font-mono text-xs" placeholder="Source URL">
               <div class="pt-4">
-                <label class="text-[9px] font-black text-slate-400 block mb-2 uppercase">Price (CNY)</label>
+                <label class="text-[9px] font-black text-slate-400 block mb-2 uppercase">Giá (CNY)</label>
                 <div class="relative">
                     <span class="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-black text-slate-300">¥</span>
                     <input type="number" id="price-cny" oninput="calculatePrice()" class="w-full pl-12 py-3 text-4xl font-mono font-black text-slate-900 bg-transparent outline-none" placeholder="0">
@@ -168,24 +168,24 @@
         <div class="lg:col-span-8 grid md:grid-cols-2 gap-6">
           <div class="nexus-card p-7 border-t-4 border-t-blue-600">
             <div class="flex justify-between items-center mb-6">
-                <span class="text-[9px] font-black bg-blue-50 text-blue-600 px-3 py-1 rounded-full uppercase">Node Behao</span>
-                <span class="font-mono text-[10px] text-slate-400">3,920</span>
+                <span class="text-[9px] font-black bg-blue-50 text-blue-600 px-3 py-1 rounded-full uppercase">BEHAO</span>
+                <span class="font-mono text-[10px] text-slate-400">3,960</span>
             </div>
             <div class="space-y-3 mb-6">
-                <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Subtotal</span><span id="bh-vnd" class="font-mono text-slate-900">0</span></div>
-                <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Fee (3%+170k)</span><span id="bh-fee" class="font-mono text-slate-900">0</span></div>
+                <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Giá sản phẩm</span><span id="bh-vnd" class="font-mono text-slate-900">0</span></div>
+                <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Phí dịch vụ</span><span id="bh-fee" class="font-mono text-slate-900">0</span></div>
                 <div class="pt-4 border-t border-dashed flex justify-between items-baseline">
-                    <span class="text-[9px] font-black text-blue-600 uppercase">Grand Total</span>
+                    <span class="text-[9px] font-black text-blue-600 uppercase">Tổng về tay</span>
                     <span id="bh-total" class="font-mono font-black text-3xl text-slate-900">0</span>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                  <span class="text-[8px] font-black text-slate-400 block uppercase mb-1">Deposit (65%)</span>
+                  <span class="text-[8px] font-black text-slate-400 block uppercase mb-1">Cọc trước (65%)</span>
                   <div id="bh-dep" class="font-mono font-bold text-slate-700 text-sm">0</div>
                 </div>
                 <div class="bg-blue-50/50 p-3 rounded-xl border border-blue-100">
-                  <span class="text-[8px] font-black text-blue-400 block uppercase mb-1">Balance (+36k)</span>
+                  <span class="text-[8px] font-black text-blue-400 block uppercase mb-1">Thanh toán sau</span>
                   <div id="bh-rem" class="font-mono font-bold text-blue-600 text-sm">0</div>
                 </div>
             </div>
@@ -194,45 +194,45 @@
 
           <div class="nexus-card p-7 border-t-4 border-t-amber-500">
             <div class="flex justify-between items-center mb-6">
-                <span class="text-[9px] font-black bg-amber-50 text-amber-600 px-3 py-1 rounded-full uppercase">Node Locgc</span>
-                <span class="font-mono text-[10px] text-slate-400">3,950</span>
+                <span class="text-[9px] font-black bg-amber-50 text-amber-600 px-3 py-1 rounded-full uppercase">LOCGC</span>
+                <span class="font-mono text-[10px] text-slate-400">3,980</span>
             </div>
             <div class="space-y-3 mb-6">
-                <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Subtotal</span><span id="lc-vnd" class="font-mono text-slate-900">0</span></div>
-                <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Fee (3.5%+170k)</span><span id="lc-fee" class="font-mono text-slate-900">0</span></div>
+                <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Giá sản phẩm</span><span id="lc-vnd" class="font-mono text-slate-900">0</span></div>
+                <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Phí dịch vụ</span><span id="lc-fee" class="font-mono text-slate-900">0</span></div>
                 <div class="pt-4 border-t border-dashed flex justify-between items-baseline">
-                    <span class="text-[9px] font-black text-amber-600 uppercase">Grand Total</span>
+                    <span class="text-[9px] font-black text-amber-600 uppercase">Tổng về tay</span>
                     <span id="lc-total" class="font-mono font-black text-3xl text-slate-900">0</span>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                  <span class="text-[8px] font-black text-slate-400 block uppercase mb-1">Deposit (50%)</span>
+                  <span class="text-[8px] font-black text-slate-400 block uppercase mb-1">Cọc trước (50%)</span>
                   <div id="lc-dep" class="font-mono font-bold text-slate-700 text-sm">0</div>
                 </div>
                 <div class="bg-amber-50/50 p-3 rounded-xl border border-amber-100">
-                  <span class="text-[8px] font-black text-amber-400 block uppercase mb-1">Balance (+30k)</span>
+                  <span class="text-[8px] font-black text-amber-400 block uppercase mb-1">Thanh toán sau</span>
                   <div id="lc-rem" class="font-mono font-bold text-amber-600 text-sm">0</div>
                 </div>
             </div>
-            <button onclick="addToTrack('LOCGC')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-amber-500 transition-all shadow-lg shadow-slate-200">Deploy Cluster</button>
+            <button onclick="addToTrack('LOCGC')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-amber-500 transition-all shadow-lg shadow-slate-200">Chốt đơn vị</button>
           </div>
         </div>
       </div>
 
       <div class="mt-12 nexus-card overflow-hidden border-none shadow-lg">
         <div class="px-8 py-5 bg-slate-900 flex justify-between items-center">
-            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Manifest Pending Queue</span>
-            <span id="temp-count" class="font-mono text-[10px] font-black bg-blue-600 text-white px-4 py-1 rounded-full">0 UNITS</span>
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Bảng lưu tạm Model</span>
+            <span id="temp-count" class="font-mono text-[10px] font-black bg-blue-600 text-white px-4 py-1 rounded-full">0 Models</span>
         </div>
         <div class="table-container">
           <table class="w-full text-left">
               <thead>
                   <tr class="text-[10px] font-black text-slate-400 uppercase bg-slate-50 border-b">
-                      <th class="px-8 py-5">Designation</th>
-                      <th class="px-6 py-5 text-center">Node</th>
-                      <th class="px-6 py-5 text-right">Value (VND)</th>
-                      <th class="px-8 py-5 text-center">OP</th>
+                      <th class="px-8 py-5">Thông tin model</th>
+                      <th class="px-6 py-5 text-center">Đơn vị</th>
+                      <th class="px-6 py-5 text-right">Giá</th>
+                      <th class="px-8 py-5 text-center">Thao tác</th>
                   </tr>
               </thead>
               <tbody id="temp-table-body" class="divide-y divide-slate-100"></tbody>
@@ -246,10 +246,10 @@
         <div class="absolute -right-20 -top-20 w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full"></div>
         <div class="relative z-10 flex flex-col md:flex-row justify-between items-center">
             <div>
-                <h2 class="text-white text-3xl font-black uppercase tracking-tighter italic">Liaison<span class="text-blue-500 font-normal">_Radar</span></h2>
+                <h2 class="text-white text-3xl font-black uppercase tracking-tighter italic">Quản Lý<span class="text-blue-500 font-normal">_Đơn hàng</span></h2>
                 <div class="flex items-center gap-5 mt-4">
                     <div class="flex flex-col">
-                        <span class="text-[8px] text-slate-500 font-black uppercase mb-1">Aggregated Liability:</span>
+                        <span class="text-[8px] text-slate-500 font-black uppercase mb-1">Cần thanh toán/Tổng:</span>
                         <div class="flex items-baseline gap-2">
                             <span id="selected-total-rem" class="font-mono text-5xl text-white font-black">0</span>
                             <span class="text-[10px] text-blue-500 font-bold uppercase">VND</span>
@@ -257,7 +257,7 @@
                     </div>
                 </div>
             </div>
-            <button onclick="bulkComplete()" class="mt-6 md:mt-0 bg-blue-600 text-white px-12 py-5 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-blue-600 transition-all shadow-xl shadow-blue-500/20">Purge Selected</button>
+            <button onclick="bulkComplete()" class="mt-6 md:mt-0 bg-blue-600 text-white px-12 py-5 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white hover:text-blue-600 transition-all shadow-xl shadow-blue-500/20">Hoàn thành</button>
         </div>
       </div>
 
@@ -267,12 +267,12 @@
             <thead class="bg-slate-50 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b">
                 <tr>
                     <th class="px-8 py-6 text-center"><input type="checkbox" id="master-check" onchange="toggleAllCheck(this)" class="w-5 h-5 accent-blue-600 rounded"></th>
-                    <th class="px-6 py-6">Unit Designation</th>
-                    <th class="px-4 py-6 text-center">Node</th>
-                    <th class="px-6 py-6 text-right">Debit</th>
-                    <th class="px-6 py-6">Status</th>
+                    <th class="px-6 py-6">Models</th>
+                    <th class="px-4 py-6 text-center">Đơn vị</th>
+                    <th class="px-6 py-6 text-right">Cần thanh toán</th>
+                    <th class="px-6 py-6">Trạng thái</th>
                     <th class="px-6 py-6">Notes</th>
-                    <th class="px-8 py-6 text-center">OP</th>
+                    <th class="px-8 py-6 text-center">Done</th>
                 </tr>
             </thead>
             <tbody id="track-table-body" class="divide-y divide-slate-50 bg-white"></tbody>
@@ -285,19 +285,19 @@
       <div id="profit-report-area" class="nexus-card p-12 shadow-2xl border-none">
         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-16 gap-10 border-b border-slate-50 pb-12">
             <div>
-                <span class="text-[10px] font-black text-blue-500 mb-3 block uppercase tracking-[0.3em]">Financial Intelligence</span>
-                <h2 class="text-6xl font-black text-slate-900 italic uppercase tracking-tighter">Treasury<span class="text-slate-200">_Ops</span></h2>
+                <span class="text-[10px] font-black text-blue-500 mb-3 block uppercase tracking-[0.3em]">Phân Chia Lợi Nhuận</span>
+                <h2 class="text-6xl font-black text-slate-900 italic uppercase tracking-tighter">DINO<span class="text-slate-200">_Bro</span></h2>
                 <p id="report-date" class="text-slate-400 text-[10px] font-bold uppercase mt-4 font-mono tracking-widest"></p>
             </div>
             
             <div class="flex flex-wrap gap-5 no-print">
                 <div class="relative">
-                    <label class="text-[9px] font-black text-slate-400 uppercase block mb-3 ml-2">Total Net Profit (VND)</label>
+                    <label class="text-[9px] font-black text-slate-400 uppercase block mb-3 ml-2">Tổng lợi nhuận (VND)</label>
                     <input type="number" id="total-profit" oninput="calculateProfit()" class="w-72 nexus-card !rounded-2xl !p-5 text-3xl font-mono font-black text-blue-600 border-2 border-slate-50" placeholder="0">
                 </div>
                 <div class="flex items-end gap-3">
                     <button onclick="addPartner()" class="bg-white border border-slate-200 w-14 h-14 rounded-2xl flex items-center justify-center hover:bg-slate-50 transition-colors shadow-sm"><i class="fas fa-user-plus text-slate-400"></i></button>
-                    <button onclick="captureReport()" class="bg-slate-900 text-white px-10 h-14 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-600 transition-all">Manifest PDF</button>
+                    <button onclick="captureReport()" class="bg-slate-900 text-white px-10 h-14 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-600 transition-all">Xuất PNG</button>
                 </div>
             </div>
         </div>
@@ -353,7 +353,6 @@
   let partners = [
     { name: 'Sơn', capital: 0, workload: 0 },
     { name: 'Nhân', capital: 0, workload: 0 },
-    { name: 'Thức', capital: 0, workload: 0 },
     { name: 'Chấn', capital: 0, workload: 0 }
   ];
   let tempData = [];
@@ -380,10 +379,10 @@
 
   function calculatePrice() {
     const cny = parseFloat(document.getElementById('price-cny').value) || 0;
-    const bhVnd = cny * 3920, bhFee = (bhVnd * 0.03) + 170000, bhTotal = bhVnd + bhFee;
-    const bhRem = bhTotal - (bhTotal * 0.65) + 36000;
-    const lcVnd = cny * 3950, lcFee = (lcVnd * 0.035) + 170000, lcTotal = lcVnd + lcFee;
-    const lcRem = lcTotal - (lcTotal * 0.5) + 30000;
+    const bhVnd = cny * 3960, bhFee = (bhVnd * 0.02) + 170000, bhTotal = bhVnd + bhFee;
+    const bhRem = bhTotal - (bhTotal * 0.65);
+    const lcVnd = cny * 3980, lcFee = (lcVnd * 0.035) + 185000, lcTotal = lcVnd + lcFee;
+    const lcRem = lcTotal - (lcTotal * 0.5);
 
     document.getElementById('bh-vnd').innerText = bhVnd.toLocaleString();
     document.getElementById('bh-fee').innerText = bhFee.toLocaleString();
@@ -474,6 +473,8 @@
             <option ${item.status==='Đã về đến VN'?'selected':''}>Đã về đến VN</option>
             <option ${item.status==='Đang vận chuyển'?'selected':''}>Đang vận chuyển</option>
             <option ${item.status==='Đã nhận hàng'?'selected':''}>Đã nhận hàng</option>
+            <option ${item.status==='Đang bán'?'selected':''}>Đang bán</option>
+            <option ${item.status==='Đã bán'?'selected':''}>Đã bán</option>
           </select>
         </td>
         <td class="px-6 py-6"><input type="text" value="${item.note}" onchange="updateNote(${item.id}, this.value)" class="bg-transparent border-b border-transparent focus:border-blue-500 w-full text-[11px] outline-none font-medium"></td>
