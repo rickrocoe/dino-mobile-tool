@@ -94,15 +94,188 @@
 </head>
 <body class="text-slate-900">
 
+<style>
+/* Glitch lệch lớp */
+@keyframes glitchShift {
+  0% { transform: translate(0,0); }
+  20% { transform: translate(-1px,1px); }
+  40% { transform: translate(-1px,-1px); }
+  60% { transform: translate(1px,1px); }
+  80% { transform: translate(1px,-1px); }
+  100% { transform: translate(0,0); }
+}
+
+/* Scan line chạy ngang */
+@keyframes scanLine {
+  0% { top: 0%; opacity: 0; }
+  10% { opacity: 0.4; }
+  50% { top: 100%; opacity: 0.2; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Nhấp nháy digital */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  45% { opacity: 0.85; }
+  50% { opacity: 0.6; }
+  55% { opacity: 0.9; }
+}
+
+/* Wrapper */
+.logo-wrap {
+  position: relative;
+  width: 96px;
+  height: 96px;
+}
+
+/* SVG chính */
+.logo-main {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  color: white;
+  animation: flicker 2.5s infinite;
+}
+
+/* Lớp glitch đỏ */
+.logo-red {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  color: red;
+  opacity: 0.4;
+  mix-blend-mode: screen;
+  animation: glitchShift 0.3s infinite;
+}
+
+/* Lớp glitch xanh */
+.logo-blue {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  color: cyan;
+  opacity: 0.4;
+  mix-blend-mode: screen;
+  animation: glitchShift 0.25s infinite reverse;
+}
+
+/* Scan line */
+.scan-line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: white;
+  opacity: 0.2;
+  animation: scanLine 2s linear infinite;
+}
+<style>
+/* Vòng ngoài quay (rotor) */
+@keyframes rotateOuter {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Vòng trong quay ngược */
+@keyframes rotateInner {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+/* Nhịp cơ khí nhẹ */
+@keyframes mechanicalPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+/* Wrapper */
+.logo-tech {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 32px;
+}
+
+/* Vòng ngoài */
+.ring-outer {
+  position: absolute;
+  inset: 0;
+  border: 2px dashed rgba(255,255,255,0.2);
+  border-radius: 50%;
+  animation: rotateOuter 8s linear infinite;
+}
+
+/* Vòng trong */
+.ring-inner {
+  position: absolute;
+  inset: 12px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-radius: 50%;
+  animation: rotateInner 5s linear infinite;
+}
+
+/* Logo chính */
+.logo-core {
+  position: absolute;
+  inset: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  animation: mechanicalPulse 2.5s ease-in-out infinite;
+}
+
+/* SVG */
+.logo-core svg {
+  width: 100%;
+  height: 100%;
+}
+</style>
+
 <div id="lock-screen">
     <div class="text-center w-full max-w-sm px-6">
-        <div class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center text-white text-3xl mx-auto mb-8 shadow-2xl animate-pulse">
-            <i class="fas fa-lock"></i>
+
+        <!-- LOGO TECH -->
+        <div class="logo-tech">
+
+            <div class="ring-outer"></div>
+            <div class="ring-inner"></div>
+
+            <div class="logo-core">
+                <svg viewBox="0 0 361.81 351.4">
+                    <path fill="currentColor" d="M361.81,16.3h-17.43V0H198.12l-0.11,16.98h-17.87l0.4,105.28h-18.42v15.62h-27.17v17.21
+                    l-26.26-0.45v16.53l-18.79-0.06v16.36l-34.24-0.17l0.06-16.59l-17.21-0.06V154.4l-18.34-0.23v-32.09l-20.15-0.06v99.4
+                    l17.66,0.45v15.4l17.66-0.06v16.58l18.57-0.23v16.98H71.8v16.08l18.34,0.06v64.7h37.58v-17.43l-17.21-0.23v-14.49h17.43
+                    v-15.62l18.79-0.23v-16.53l15.4-0.23v16.08h18.01v48.68h38.14v-17.89h-18.11L199.94,271h18.23l-0.11-16.53h17.89
+                    l0.23-24.23h18.57l-0.68-56.6h15.62l0.23,15.62h20.38l-0.45-34.42h-35.32l-0.68-30.57h72.23v-18.79h-53.89l-0.23-13.13
+                    h89.89V16.3H361.81z M237.28,43.24h-23.77V23.77h23.77V43.24z"/>
+                </svg>
+            </div>
+
         </div>
-        <h2 class="text-white text-xl font-black uppercase tracking-widest mb-2">Khóa truy cập Dino</h2>
-        <p class="text-slate-500 text-[10px] mb-8 uppercase tracking-widest">Mật khẩu bảo mật</p>
-        <input type="password" id="sys-pass" class="w-full bg-slate-800 border-none text-white text-center text-2xl tracking-[0.5em] p-4 rounded-2xl mb-4 outline-none focus:ring-2 ring-blue-500" placeholder="••••••••">
-        <button onclick="unlockSystem()" class="w-full bg-blue-600 text-white font-black py-4 rounded-2xl hover:bg-blue-500 transition-all uppercase text-[10px] tracking-widest">Truy cập</button>
+
+        <h2 class="text-white text-xl font-black uppercase tracking-widest mb-2">
+            Khóa truy cập Dino
+        </h2>
+
+        <p class="text-slate-500 text-[10px] mb-8 uppercase tracking-widest">
+            Mật khẩu bảo mật
+        </p>
+
+        <input 
+            type="password" 
+            id="sys-pass" 
+            class="w-full bg-slate-800 border-none text-white text-center text-2xl tracking-[0.5em] p-4 rounded-2xl mb-4 outline-none focus:ring-2 ring-blue-500" 
+            placeholder="••••••••"
+        >
+
+        <button 
+            onclick="unlockSystem()" 
+            class="w-full bg-blue-600 text-white font-black py-4 rounded-2xl hover:bg-blue-500 transition-all uppercase text-[10px] tracking-widest"
+        >
+            Truy cập
+        </button>
+
     </div>
 </div>
 
@@ -111,8 +284,15 @@
     <div class="max-w-7xl mx-auto nexus-card px-8 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md border-none shadow-xl shadow-slate-200/50">
       <div class="flex items-center gap-4">
         <div class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white shadow-lg">
-          <i class="fas fa-bolt-lightning"></i>
-        </div>
+  <svg viewBox="0 0 361.81 351.4" class="w-6 h-6">
+    <path fill="currentColor" d="M361.81,16.3h-17.43V0H198.12l-0.11,16.98h-17.87l0.4,105.28h-18.42v15.62h-27.17v17.21
+    l-26.26-0.45v16.53l-18.79-0.06v16.36l-34.24-0.17l0.06-16.59l-17.21-0.06V154.4l-18.34-0.23v-32.09l-20.15-0.06v99.4
+    l17.66,0.45v15.4l17.66-0.06v16.58l18.57-0.23v16.98H71.8v16.08l18.34,0.06v64.7h37.58v-17.43l-17.21-0.23v-14.49h17.43
+    v-15.62l18.79-0.23v-16.53l15.4-0.23v16.08h18.01v48.68h38.14v-17.89h-18.11L199.94,271h18.23l-0.11-16.53h17.89
+    l0.23-24.23h18.57l-0.68-56.6h15.62l0.23,15.62h20.38l-0.45-34.42h-35.32l-0.68-30.57h72.23v-18.79h-53.89l-0.23-13.13
+    h89.89V16.3H361.81z M237.28,43.24h-23.77V23.77h23.77V43.24z"/>
+  </svg>
+</div>
         <div>
           <h1 class="text-lg font-black tracking-tighter uppercase">DINO MOBILE <span class="text-blue-600">MANAGER</span></h1>
           <span id="live-clock" class="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest">SYSTEM_LIVE</span>
