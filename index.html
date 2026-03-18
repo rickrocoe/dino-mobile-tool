@@ -152,9 +152,9 @@
             <div class="scanline"></div>
             <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6 block">Nhập thông tin</span>
             <div class="space-y-5">
-              <input type="text" id="model-name" class="input-nexus" placeholder="Product Name / SKU">
-              <input type="text" id="model-link" class="input-nexus text-blue-600 font-mono text-xs" placeholder="Source URL">
-              <div class="pt-4">
+              <input type="text" id="model-name" class="input-nexus" placeholder="Tên Model / SKU">
+              <input type="text" id="model-link" class="input-nexus text-blue-600 font-mono text-xs" placeholder="Link sản phẩm">
+              <div class="pt-5">
                 <label class="text-[9px] font-black text-slate-400 block mb-2 uppercase">Giá (CNY)</label>
                 <div class="relative">
                     <span class="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-black text-slate-300">¥</span>
@@ -189,7 +189,7 @@
                   <div id="bh-rem" class="font-mono font-bold text-blue-600 text-sm">0</div>
                 </div>
             </div>
-            <button onclick="addToTrack('BEHAO')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg shadow-slate-200">Deploy Cluster</button>
+            <button onclick="addToTrack('BEHAO')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg shadow-slate-200">CHỐT ĐƠN VỊ</button>
           </div>
 
           <div class="nexus-card p-7 border-t-4 border-t-amber-500">
@@ -431,7 +431,7 @@
       <tr class="hover:bg-slate-50 transition-colors">
         <td class="px-8 py-5">
             <div class="font-bold text-slate-900 text-sm">${item.name}</div>
-            <a href="${item.link}" target="_blank" class="text-[9px] text-blue-500 font-black hover:underline font-mono uppercase">Source_Manifest</a>
+            <a href="${item.link}" target="_blank" class="text-[9px] text-blue-500 font-black hover:underline font-mono uppercase">Link gốc</a>
         </td>
         <td class="px-6 py-5 text-center">
             <span class="text-[9px] font-black px-4 py-1 rounded-full ${item.dv==='BEHAO'?'bg-blue-600 text-white':'bg-slate-900 text-white'}">${item.dv}</span>
@@ -463,7 +463,7 @@
         <td class="px-8 py-6 text-center"><input type="checkbox" class="track-check w-5 h-5 accent-blue-600 rounded" data-id="${item.id}" data-rem="${item.rem}" onchange="calcSelectedRem()"></td>
         <td class="px-6 py-6">
           <div class="font-bold text-slate-900 text-sm">${item.name}</div>
-          <a href="${item.link}" target="_blank" class="text-[9px] text-slate-400 font-bold hover:text-blue-600 font-mono">TRACK_URL</a>
+          <a href="${item.link}" target="_blank" class="text-[9px] text-slate-400 font-bold hover:text-blue-600 font-mono">Link gốc</a>
         </td>
         <td class="px-4 py-6 text-center"><span class="text-[9px] font-black px-2 py-1 border rounded ${item.dv==='BEHAO'?'text-blue-600 border-blue-200':'text-slate-900 border-slate-900'}">${item.dv}</span></td>
         <td class="px-6 py-6 text-right font-mono font-black text-blue-600">${item.rem.toLocaleString()}</td>
@@ -502,8 +502,8 @@
       <div class="nexus-card p-7 hover:border-blue-200 transition-all shadow-sm">
         <div class="flex justify-between items-center mb-8"><span class="font-black text-slate-900 text-[10px] uppercase">${p.name}</span><i class="fas fa-dna text-slate-100"></i></div>
         <div class="space-y-4">
-          <div><label class="text-[8px] font-black text-slate-400 uppercase mb-2 block tracking-widest">Capital Share (%)</label><input type="number" oninput="updatePartner(${idx}, 'capital', this.value)" class="input-nexus !p-3 font-mono" value="${p.capital}"></div>
-          <div><label class="text-[8px] font-black text-slate-400 uppercase mb-2 block tracking-widest">Op Power (%)</label><input type="number" oninput="updatePartner(${idx}, 'workload', this.value)" class="input-nexus !p-3 font-mono text-blue-600" value="${p.workload}"></div>
+          <div><label class="text-[8px] font-black text-slate-400 uppercase mb-2 block tracking-widest">Cổ phần</label><input type="number" oninput="updatePartner(${idx}, 'capital', this.value)" class="input-nexus !p-3 font-mono" value="${p.capital}"></div>
+          <div><label class="text-[8px] font-black text-slate-400 uppercase mb-2 block tracking-widest">Công việc (%)</label><input type="number" oninput="updatePartner(${idx}, 'workload', this.value)" class="input-nexus !p-3 font-mono text-blue-600" value="${p.workload}"></div>
         </div>
       </div>`).join('');
     calculateProfit();
@@ -517,13 +517,13 @@
     const p60 = totalP * 0.6, p40 = totalP * 0.4;
     const totalCap = partners.reduce((s, p) => s + p.capital, 0), totalWork = partners.reduce((s, p) => s + p.workload, 0);
     let html = `<div class="flex flex-col md:flex-row items-center justify-between mb-12 gap-10 border-b border-slate-100 pb-10">
-      <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cap Dividend (60%): <span class="text-slate-900 font-mono text-2xl ml-4">${p60.toLocaleString()}</span></div>
-      <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Labor Yield (40%): <span class="text-slate-900 font-mono text-2xl ml-4">${p40.toLocaleString()}</span></div>
+      <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Quỹ Vốn (60%): <span class="text-slate-900 font-mono text-2xl ml-4">${p60.toLocaleString()}</span></div>
+      <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Quỹ Đóng góp (40%): <span class="text-slate-900 font-mono text-2xl ml-4">${p40.toLocaleString()}</span></div>
     </div><div class="grid grid-cols-1 md:grid-cols-2 gap-5">`;
     partners.forEach(p => {
       const sC = totalCap > 0 ? (p.capital / totalCap) * p60 : 0, sW = totalWork > 0 ? (p.workload / totalWork) * p40 : 0;
       html += `<div class="flex justify-between items-center p-8 bg-white rounded-3xl border border-slate-100 shadow-sm">
-          <div><div class="font-black text-slate-900 text-2xl uppercase italic tracking-tighter">${p.name}</div><div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Yield: ${sC.toLocaleString()} | Ops: ${sW.toLocaleString()}</div></div>
+          <div><div class="font-black text-slate-900 text-2xl uppercase italic tracking-tighter">${p.name}</div><div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Vốn: ${sC.toLocaleString()} | Công việc: ${sW.toLocaleString()}</div></div>
           <div class="text-3xl font-mono font-black text-emerald-500">${(sC+sW).toLocaleString(undefined, {maximumFractionDigits:0})}</div>
         </div>`;
     });
