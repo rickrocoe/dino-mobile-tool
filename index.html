@@ -172,40 +172,48 @@
     </div>
 
     <div id="module-intake" class="mech-module active">
-      <div class="grid lg:grid-cols-12 gap-8">
+      <div class="grid lg:grid-cols-10 gap-6 items-start">
         <div class="lg:col-span-4">
-          <div class="nexus-card p-8 overflow-hidden">
+          <div class="nexus-card p-6 overflow-hidden">
             <div class="scanline"></div>
-            <span class="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-6 block">Nhập thông tin</span>
-            <div class="space-y-5">
+            <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4 block">Nhập thông tin</span>
+            <div class="space-y-4">
               <input type="text" id="model-name" class="input-nexus" placeholder="Tên Model">
               <input type="text" id="model-link" class="input-nexus" placeholder="Link sản phẩm">
+              <div>
+                <label class="text-[9px] font-black text-slate-400 block mb-2 uppercase">Tỷ giá tệ - VND</label>
+                <input type="number" id="exchange-rate" oninput="calculatePrice()" class="input-nexus font-mono" placeholder="Nhập tỷ giá, ví dụ: 3960">
+              </div>
               <div class="pt-5">
                 <label class="text-[9px] font-black text-slate-400 block mb-2 uppercase">Giá (CNY)</label>
                 <div class="relative">
                     <span class="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-black text-slate-300">¥</span>
-                    <input type="number" id="price-cny" oninput="calculatePrice()" class="w-full pl-12 py-3 text-4xl font-mono font-black text-slate-900 bg-transparent outline-none" placeholder="0">
+                    <input type="number" id="price-cny" oninput="calculatePrice()" class="w-full pl-12 py-2 text-3xl font-mono font-black text-slate-900 bg-transparent outline-none" placeholder="0">
                 </div>
               </div>
+              <label class="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase cursor-pointer">
+                <input type="checkbox" id="locgc-optional" onchange="toggleOptionalLocgc()" class="accent-amber-500">
+                Bật lựa chọn phụ LOCGC
+              </label>
             </div>
           </div>
         </div>
 
-        <div class="lg:col-span-8 grid md:grid-cols-2 gap-6">
-          <div class="nexus-card p-7 border-t-4 border-t-blue-600">
+        <div class="lg:col-span-6 grid md:grid-cols-2 gap-4">
+          <div class="nexus-card p-5 border-t-4 border-t-blue-600">
             <div class="flex justify-between items-center mb-6">
                 <span class="text-[11px] font-black bg-blue-50 text-blue-600 px-3 py-1 rounded-full uppercase">BEHAO</span>
-                <span class="font-mono text-[11px] text-slate-400">3,960</span>
+                <span id="bh-rate-label" class="font-mono text-[11px] text-slate-400">Tỷ giá linh động</span>
             </div>
-            <div class="space-y-3 mb-6">
+            <div class="space-y-2 mb-4">
                 <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Giá sản phẩm</span><span id="bh-vnd" class="font-mono text-slate-900">0</span></div>
                 <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Phí dịch vụ</span><span id="bh-fee" class="font-mono text-slate-900">0</span></div>
                 <div class="pt-4 border-t border-dashed flex justify-between items-baseline">
                     <span class="text-[9px] font-black text-blue-600 uppercase">Tổng về tay</span>
-                    <span id="bh-total" class="font-mono font-black text-3xl text-slate-900">0</span>
+                    <span id="bh-total" class="font-mono font-black text-2xl text-slate-900">0</span>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-2 gap-3 mb-4">
                 <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
                   <span class="text-[8px] font-black text-slate-400 block uppercase mb-1">Cọc trước (65%)</span>
                   <div id="bh-dep" class="font-mono font-bold text-slate-700 text-sm">0</div>
@@ -215,23 +223,23 @@
                   <div id="bh-rem" class="font-mono font-bold text-blue-600 text-sm">0</div>
                 </div>
             </div>
-            <button onclick="addToTrack('BEHAO')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg shadow-slate-200">CHỐT ĐƠN VỊ</button>
+            <button onclick="addToTrack('BEHAO')" class="w-full bg-slate-900 text-white py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg shadow-slate-200">CHỐT ĐƠN VỊ MẶC ĐỊNH</button>
           </div>
 
-          <div class="nexus-card p-7 border-t-4 border-t-amber-500">
+          <div id="locgc-card" class="nexus-card p-5 border-t-4 border-t-amber-500 hidden">
             <div class="flex justify-between items-center mb-6">
                 <span class="text-[11px] font-black bg-amber-50 text-amber-600 px-3 py-1 rounded-full uppercase">LOCGC</span>
-                <span class="font-mono text-[11px] text-slate-400">3,980</span>
+                <span class="font-mono text-[11px] text-slate-400">Lựa chọn phụ</span>
             </div>
-            <div class="space-y-3 mb-6">
+            <div class="space-y-2 mb-4">
                 <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Giá sản phẩm</span><span id="lc-vnd" class="font-mono text-slate-900">0</span></div>
                 <div class="flex justify-between text-xs font-bold text-slate-400 uppercase"><span>Phí dịch vụ</span><span id="lc-fee" class="font-mono text-slate-900">0</span></div>
                 <div class="pt-4 border-t border-dashed flex justify-between items-baseline">
                     <span class="text-[9px] font-black text-amber-600 uppercase">Tổng về tay</span>
-                    <span id="lc-total" class="font-mono font-black text-3xl text-slate-900">0</span>
+                    <span id="lc-total" class="font-mono font-black text-2xl text-slate-900">0</span>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-2 gap-3 mb-4">
                 <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
                   <span class="text-[8px] font-black text-slate-400 block uppercase mb-1">Cọc trước (50%)</span>
                   <div id="lc-dep" class="font-mono font-bold text-slate-700 text-sm">0</div>
@@ -241,7 +249,7 @@
                   <div id="lc-rem" class="font-mono font-bold text-amber-600 text-sm">0</div>
                 </div>
             </div>
-            <button onclick="addToTrack('LOCGC')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-amber-500 transition-all shadow-lg shadow-slate-200">Chốt đơn vị</button>
+            <button onclick="addToTrack('LOCGC')" class="w-full bg-slate-900 text-white py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-amber-500 transition-all shadow-lg shadow-slate-200">Chốt lựa chọn phụ LOCGC</button>
           </div>
         </div>
       </div>
@@ -298,7 +306,7 @@
                     <th class="px-6 py-6 text-right">Cần thanh toán</th>
                     <th class="px-6 py-6">Trạng thái</th>
                     <th class="px-6 py-6">Notes</th>
-                    <th class="px-8 py-6 text-center">Done</th>
+                    <th class="px-8 py-6 text-center">Thao tác</th>
                 </tr>
             </thead>
             <tbody id="track-table-body" class="divide-y divide-slate-50 bg-white"></tbody>
@@ -331,6 +339,44 @@
       </div>
     </div>
   </main>
+</div>
+
+<div id="edit-order-modal" class="fixed inset-0 z-[999] hidden">
+  <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm" onclick="closeEditModal()"></div>
+  <div class="relative h-full flex items-center justify-center p-4">
+    <div class="w-full max-w-lg nexus-card p-6">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="text-lg font-black uppercase tracking-tight">Chỉnh sửa đơn hàng</h3>
+        <button onclick="closeEditModal()" class="w-9 h-9 rounded-full hover:bg-slate-100"><i class="fas fa-xmark"></i></button>
+      </div>
+      <div class="space-y-4">
+        <input type="hidden" id="edit-order-id">
+        <div>
+          <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Số tiền cần thanh toán (VND)</label>
+          <input type="number" id="edit-order-rem" class="input-nexus font-mono">
+        </div>
+        <div>
+          <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Trạng thái</label>
+          <select id="edit-order-status" class="input-nexus">
+            <option>Đã mua hàng</option>
+            <option>Đã về đến VN</option>
+            <option>Đang vận chuyển</option>
+            <option>Đã nhận hàng</option>
+            <option>Đang bán</option>
+            <option>Đã bán</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Ghi chú</label>
+          <textarea id="edit-order-note" rows="3" class="input-nexus resize-none"></textarea>
+        </div>
+        <div class="flex justify-end gap-3 pt-2">
+          <button onclick="closeEditModal()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 font-bold text-xs uppercase">Hủy</button>
+          <button onclick="saveOrderEdit()" class="px-5 py-2 rounded-xl bg-blue-600 text-white font-black text-xs uppercase tracking-widest">Lưu cập nhật</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -378,6 +424,12 @@
   let tempData = [];
   let trackData = [];
 
+  function toggleOptionalLocgc() {
+    const locgcCard = document.getElementById('locgc-card');
+    const enabled = document.getElementById('locgc-optional').checked;
+    locgcCard.classList.toggle('hidden', !enabled);
+  }
+
   async function apiCall(data) { try { await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) }); } catch (e) { console.error(e); } }
 
   window.onload = async () => {
@@ -398,11 +450,13 @@
   };
 
   function calculatePrice() {
+    const exchangeRate = parseFloat(document.getElementById('exchange-rate').value) || 0;
     const cny = parseFloat(document.getElementById('price-cny').value) || 0;
-    const bhVnd = cny * 3960, bhFee = (bhVnd * 0.02) + 170000, bhTotal = bhVnd + bhFee;
+    const bhVnd = cny * exchangeRate, bhFee = (bhVnd * 0.02) + 170000, bhTotal = bhVnd + bhFee;
     const bhRem = bhTotal - (bhTotal * 0.65);
-    const lcVnd = cny * 3980, lcFee = (lcVnd * 0.035) + 185000, lcTotal = lcVnd + lcFee;
+    const lcVnd = cny * exchangeRate, lcFee = (lcVnd * 0.035) + 185000, lcTotal = lcVnd + lcFee;
     const lcRem = lcTotal - (lcTotal * 0.5);
+    document.getElementById('bh-rate-label').innerText = exchangeRate ? `Tỷ giá ${exchangeRate.toLocaleString()}` : 'Tỷ giá linh động';
 
     document.getElementById('bh-vnd').innerText = bhVnd.toLocaleString();
     document.getElementById('bh-fee').innerText = bhFee.toLocaleString();
@@ -422,6 +476,9 @@
     let name = document.getElementById('model-name').value;
     let link = document.getElementById('model-link').value;
     const cny = parseFloat(document.getElementById('price-cny').value);
+    const exchangeRate = parseFloat(document.getElementById('exchange-rate').value);
+    if (dv === 'LOCGC' && !document.getElementById('locgc-optional').checked) return alert("Vui lòng bật lựa chọn phụ LOCGC trước.");
+    if (!exchangeRate) return alert("Vui lòng nhập tỷ giá tệ - VND trước khi tính.");
     if (!cny) return alert("Warning: Base price missing.");
     
     const p = calculatePrice();
@@ -432,7 +489,7 @@
       name = name || prompt("Unit Name:");
       link = link || prompt("Source URL:");
       if(name && link) {
-         const newItem = { id: Date.now(), name, link, dv, cny, rem, total };
+         const newItem = { id: Date.now(), name, link, dv, cny, exchangeRate, rem, total };
          await apiCall({ action: 'addData', sheetName: 'Luu_Tam', rowData: [newItem.id, newItem.name, newItem.link, newItem.dv, cny, total, rem] });
          tempData.unshift(newItem); renderTemp();
       }
@@ -496,33 +553,50 @@
             <span class="text-[9px] font-black px-2 py-1 border rounded ${item.dv==='BEHAO'?'text-blue-600 border-blue-200':'text-slate-900 border-slate-900'}">${item.dv}</span>
         </td>
         <td class="px-6 py-6 text-right font-mono font-black ${isSold ? 'text-blue-600' : 'text-blue-600'}">${item.rem.toLocaleString()}</td>
-        <td class="px-6 py-6">
-          <select onchange="updateStatus(${item.id}, this.value)" class="text-[12px] font-black bg-slate-100/50 border-none rounded-lg px-2 py-2 outline-none ${isSold ? 'text-blue-600' : ''}">
-            <option ${item.status==='Đã mua hàng'?'selected':''}>Đã mua hàng</option>
-            <option ${item.status==='Đã về đến VN'?'selected':''}>Đã về đến VN</option>
-            <option ${item.status==='Đang vận chuyển'?'selected':''}>Đang vận chuyển</option>
-            <option ${item.status==='Đã nhận hàng'?'selected':''}>Đã nhận hàng</option>
-            <option ${item.status==='Đang bán'?'selected':''}>Đang bán</option>
-            <option ${item.status==='Đã bán'?'selected':''}>Đã bán</option>
-          </select>
+        <td class="px-6 py-6 text-[12px] font-black">${item.status || ''}</td>
+        <td class="px-6 py-6 text-[11px] font-medium">${item.note || ''}</td>
+        <td class="px-8 py-6 text-center">
+          <div class="flex items-center justify-center gap-4">
+            <button onclick="editOrder(${item.id})" class="text-slate-300 hover:text-blue-500" title="Chỉnh sửa"><i class="fas fa-pen-to-square text-lg"></i></button>
+            <button onclick="completeOrder(${item.id})" class="text-slate-200 hover:text-emerald-500" title="Hoàn thành"><i class="fas fa-check-double text-xl"></i></button>
+          </div>
         </td>
-        <td class="px-6 py-6"><input type="text" value="${item.note}" onchange="updateNote(${item.id}, this.value)" class="bg-transparent border-b border-transparent focus:border-blue-500 w-full text-[11px] outline-none font-medium ${isSold ? 'text-blue-600' : ''}"></td>
-        <td class="px-8 py-6 text-center"><button onclick="completeOrder(${item.id})" class="text-slate-200 hover:text-emerald-500"><i class="fas fa-check-double text-xl"></i></button></td>
       </tr>`;
     }).join('');
     calcSelectedRem();
   }
 
-  async function updateStatus(id, val) { 
-    const i = trackData.find(x => x.id === id); 
-    if(i) { 
-        i.status = val; 
-        renderTrack(); // Cập nhật giao diện ngay khi đổi trạng thái
-        await apiCall({ action: 'updateData', sheetName: 'Theo_Doi', id, status: val, note: i.note || "" }); 
-    } 
+  function editOrder(id) {
+    const item = trackData.find(x => x.id === id);
+    if (!item) return;
+    document.getElementById('edit-order-id').value = item.id;
+    document.getElementById('edit-order-rem').value = item.rem || 0;
+    document.getElementById('edit-order-status').value = item.status || 'Đã mua hàng';
+    document.getElementById('edit-order-note').value = item.note || '';
+    document.getElementById('edit-order-modal').classList.remove('hidden');
   }
 
-  async function updateNote(id, val) { const i = trackData.find(x => x.id === id); if(i) { i.note = val; await apiCall({ action: 'updateData', sheetName: 'Theo_Doi', id, status: i.status, note: val }); } }
+  function closeEditModal() {
+    document.getElementById('edit-order-modal').classList.add('hidden');
+  }
+
+  async function saveOrderEdit() {
+    const id = parseInt(document.getElementById('edit-order-id').value, 10);
+    const newRem = parseFloat(document.getElementById('edit-order-rem').value);
+    const newStatus = document.getElementById('edit-order-status').value;
+    const newNote = document.getElementById('edit-order-note').value || '';
+    if (Number.isNaN(newRem)) return alert("Số tiền không hợp lệ.");
+
+    const item = trackData.find(x => x.id === id);
+    if (!item) return;
+    item.rem = newRem;
+    item.status = newStatus;
+    item.note = newNote;
+    closeEditModal();
+    renderTrack();
+    await apiCall({ action: 'updateData', sheetName: 'Theo_Doi', id, rem: newRem, status: newStatus, note: newNote });
+  }
+
   function toggleAllCheck(m) { document.querySelectorAll('.track-check').forEach(cb => cb.checked = m.checked); calcSelectedRem(); }
   function calcSelectedRem() { let t = 0; document.querySelectorAll('.track-check:checked').forEach(cb => t += parseFloat(cb.getAttribute('data-rem'))); document.getElementById('selected-total-rem').innerText = t.toLocaleString(); }
   async function completeOrder(id) { if(confirm("Xác nhận hoàn tất?")) { await apiCall({ action: 'deleteData', sheetName: 'Theo_Doi', id }); trackData = trackData.filter(i => i.id !== id); renderTrack(); } }
