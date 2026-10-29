@@ -7,8 +7,19 @@
  */
 function doGet(e) {
   const action = String((e && e.parameter && e.parameter.action) || '').trim();
+  if (action === 'health') {
+    try {
+      const ss = getSpreadsheet_();
+      const hasTemp = Boolean(ss.getSheetByName('Luu_Tam'));
+      const hasTrack = Boolean(ss.getSheetByName('Theo_Doi'));
+      return jsonOutput_({ok: hasTemp && hasTrack, service: 'DINO MOBILE SYSTEM', version: '1.3.1', spreadsheetConnected: true, sheets: {Luu_Tam: hasTemp, Theo_Doi: hasTrack}, message: hasTemp && hasTrack ? 'Apps Script hoạt động; đã tìm thấy cả hai sheet.' : 'Thiếu sheet Luu_Tam hoặc Theo_Doi.'});
+    } catch (err) {
+      return jsonOutput_({ok: false, service: 'DINO MOBILE SYSTEM', version: '1.3.1', spreadsheetConnected: false, error: String(err && err.message ? err.message : err)});
+    }
+  }
   if (action === 'getAll') {
-    return jsonOutput_(getAllData());
+    try { return jsonOutput_(Object.assign({ok: true, version: '1.3.1'}, getAllData())); }
+    catch (err) { return jsonOutput_({ok: false, version: '1.3.1', error: String(err && err.message ? err.message : err), temp: [], track: []}); }
   }
 
   return HtmlService.createTemplateFromFile('index')
@@ -35,9 +46,9 @@ function doPost(e) {
       throw new Error('Action không được hỗ trợ: ' + action);
     }
 
-    return jsonOutput_({ ok: true, result: result });
+    return jsonOutput_({ ok: true, version: '1.3.1', action: action, result: result });
   } catch (err) {
-    return jsonOutput_({ ok: false, error: String(err && err.message ? err.message : err) });
+    return jsonOutput_({ ok: false, version: '1.3.1', error: String(err && err.message ? err.message : err) });
   }
 }
 
