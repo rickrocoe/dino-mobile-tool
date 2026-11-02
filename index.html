@@ -725,7 +725,7 @@ body {
           </div>
           <div style="background:var(--c-surface2);border:1.5px solid var(--c-border);border-radius:14px;padding:16px;margin-bottom:16px">
             <div class="price-row"><span class="price-label">Giá sản phẩm</span><span id="bh-vnd" class="price-val">0</span></div>
-            <div class="price-row"><span class="price-label">Phí dịch vụ (2% + 170k)</span><span id="bh-fee" class="price-val">0</span></div>
+            <div class="price-row"><span class="price-label">Phí dịch vụ (3% + 170k)</span><span id="bh-fee" class="price-val">0</span></div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
             <div style="background:var(--c-surface2);border:1.5px solid var(--c-border);border-radius:12px;padding:14px">
@@ -1134,7 +1134,7 @@ window.onload = async()=>{
 function calcPrice(){
   const ex = parseFloat(document.getElementById('exchange-rate').value)||0;
   const cn = parseFloat(document.getElementById('price-cny').value)||0;
-  const vnd = cn*ex, fee = vnd*0.02+170000, total = vnd+fee;
+  const vnd = cn*ex, fee = vnd*0.03+170000, total = vnd+fee;
   const dep = total*0.65, rem = total-dep;
   document.getElementById('bh-rate-lbl').innerText = ex ? `Tỷ giá ${fmt(ex)}` : 'Chưa nhập tỷ giá';
   document.getElementById('bh-vnd').innerText   = fmt(vnd);
